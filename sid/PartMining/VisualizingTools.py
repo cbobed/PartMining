@@ -23,7 +23,8 @@ import CodeTable as ct
 ## this import depends on whether you have support for tsnecuda
 # (only available for linux + cuda enabled computers)
 # Highly recommended due to the incresed performance
-from sklearn.manifold import TSNE
+# from sklearn.manifold import TSNE
+from fastTSNE import TSNE
 #from tsnecuda import TSNE
 
 # we must load:
