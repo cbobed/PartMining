@@ -49,3 +49,20 @@ def read_analysis_table (filename):
             current_line = file.readline()
     return table
 
+## read information from the analysis to get back to the .dat file and select them
+## we can cluster them according just to the items, or to the transactions themselves
+## added the bidir table
+def read_analysis_table_bidir (filename):
+    db_dat_table = {}
+    dat_db_table = {}
+    with open(filename, mode='rt', encoding='UTF-8') as file:
+        # skip the first  lines
+        for i in range(15):
+            file.readline()
+        current_line = file.readline()
+        while (current_line != "\n"):
+            aux = current_line.split()[0].split('=>')
+            db_dat_table[int(aux[0])] = int(aux[1])
+            dat_db_table[int(aux[1])] = int(aux[0])
+            current_line = file.readline()
+    return db_dat_table, dat_db_table
