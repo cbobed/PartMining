@@ -1,3 +1,15 @@
+###############################################################################
+# File: CodeTable.py
+# Author: Carlos Bobed
+# Date: Dec 2020
+# Comments: Factorized methods from the original notebooks related to the
+#   management of code tables
+#   not OO, should be refactorized
+# Modifications:
+##############################################################################
+
+
+
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -21,15 +33,64 @@ def read_codetable(filename, load_all):
                     label+=1
     return codes
 
+def build_SCT(database):
+    sct_codetable = {}
+    for trans in database:
+        for singleton in [int(item) for item in database[trans]]:
 
-def calculate_cover(transaction, code_table):
-    item_set = set(transaction)
-    codes = []
-    current_code = 0
-    while (len(item_set) != 0 and current_code < len(code_table) ):
-        aux_code_set = set(code_table[current_code]['code'])
-        if (aux_code_set.issubset(item_set)):
-            codes.append(current_code)
-            item_set.difference_update(aux_code_set)
-        current_code+=1
-    return codes
+            if singleton not in sct_codetable:
+                sct_codetable[singleton] = {'code': str(singleton), 'support': 0, 'usage': 0}
+            sct_codetable[singleton]['usage'] = sct_codetable[singleton]['usage'] + 1
+            sct_codetable[singleton]['support'] = sct_codetable[singleton]['support'] + 1
+    return sct_codetable
+
+def convert_int_codetable (codetable, analysis_table):
+    converted = {}
+    for label in codetable:
+        translated_code = [ analysis_table[int(item)] for item in codetable[label]['code']]
+        converted[label] = {'code_int':translated_code,
+                            'code_set':set(translated_code)}
+    return converted
+
+
+## naive way of merging the codetables
+## for convenience we work here with integers (we kept the codetables as string tokens to be able to handle the vector models)
+def merge_codetables(codetables):
+    merged = {}
+    non_colision_labelbase = 0
+    for ct in codetables:
+        for label in ct:
+            current_label = str(non_colision_labelbase) + '_' + str(label)
+            merged[current_label] = ct[label]
+        non_colision_labelbase += 1
+    # we keep track of the codes that are duplicated
+    to_omit = set()
+    merged_key_list = list(merged.keys())
+    for i in range(len(merged_key_list)):
+        if merged_key_list[i] not in to_omit:
+            for j in range(i + 1, len(merged_key_list)):
+                if merged_key_list[j] not in to_omit:
+                    # depending on how the table has been obtained it might or not have the code_set field
+                    ## converted using the analysis table (convert_int_codetable) => it has
+                    ## loaded from file => it hasn't
+                    if 'code_set' in merged[merged_key_list[i]]:
+                        set_i = merged[merged_key_list[i]]['code_set']
+                    else:
+                        set_i = set([int(item) for item in merged[merged_key_list[i]]['code']])
+                    if 'code_set' in merged[merged_key_list[j]]:
+                        set_j = merged[merged_key_list[j]]['code_set']
+                    else:
+                        set_j = set([int(item) for item in merged[merged_key_list[j]]['code']])
+                    if set_i == set_j:
+                        to_omit.add(merged_key_list[j])
+    # we get rid of the duplicated entries in the codetable
+    [merged.pop(code) for code in to_omit]
+
+    for label in merged:
+        if 'code_int' in merged[label]:
+            merged[label]['code'] = [str(item) for item in merged[label]['code_int']]
+        merged[label]['usage'] = 0
+        merged[label]['support'] = 0
+
+    return merged
+

@@ -75,8 +75,9 @@ def calculate_weighted_centroids(model, labelled_transactions):
 ## Clustering methods
 
 def cluster_data(method, vectors, num_clusters, normalize):
+    dim = vectors[0].shape[0]
     if normalize:
-        actual_vectors = np.array([preprocessing.normalize(x) for x in vectors])
+        actual_vectors = np.array([preprocessing.normalize(x.reshape(1,dim)).reshape(dim,) for x in vectors])
     else:
         actual_vectors = np.array([x for x in vectors])
 
@@ -98,63 +99,96 @@ def cluster_data(method, vectors, num_clusters, normalize):
 ## we build the clusters accordingly from the calculated k-means of their vectors
 ## done in this way for readability purposes, we can speed up this process by
 ## sharing orders
-def item_labelling_from_item_vects(item_vects, items_kmeans, dim):
+def item_labelling_from_item_vects(item_vects, item_clusters, dim, clustering_method):
     # labelled_vects = {int(x): model.wv[x] for x in model.wv.vocab}
     cluster = {}
     base_label_item = 'item_clust_'
-    for i in item_vects:
-        item_D, item_I = items_kmeans.index.search(item_vects[i].reshape(1, dim), 1)
-        current_label = base_label_item + str(item_I[0, 0])
-        if current_label not in cluster:
-            cluster[current_label] = set()
-        cluster[current_label].add(i)
+    if clustering_method == 'k_means':
+        for i in range(len(item_vects)):
+            print(f'item_vects[i]: {item_vects[i].shape}')
+            item_D, item_I = item_clusters.index.search(item_vects[i].reshape(1, dim), 1)
+            current_label = base_label_item + str(item_I[0, 0])
+            if current_label not in cluster:
+                cluster[current_label] = set()
+            cluster[current_label].add(i)
+    elif clustering_method == 'hdbscan':
+        # hdbscan object has a label_ field with directly the label of each of the elements
+        # in item_vects :: it's the same order
+        for i in range(len(item_vects)):
+            current_label = base_label_item + str(item_clusters.labels_[i])
+            if current_label not in cluster:
+                cluster[current_label] = set()
+            cluster[current_label].add(item_vects[i])
     return cluster
-
 
 ## we build the clusters accordingly from the items in the transactions belonging to a
 ## cluster
-def item_labelling_from_trans_vects(database, trans_vects, trans_kmeans, dim):
+def item_labelling_from_trans_vects(database, trans_vects, trans_clusters, dim, clustering_method):
     # from read_database_*
     #     transactions[label] = list(words)
     #     label+=1
 
     cluster = {}
     base_label_trans_item = 'trans_item_clust_'
-    for t in trans_vects:
-        trans_D, trans_I = trans_kmeans.index.search(trans_vects[t].reshape(1, dim), 1)
-        current_label = base_label_trans_item + str(trans_I[0, 0])
-        if current_label not in cluster:
-            cluster[current_label] = set()
-        ## centroids/trans_vects share the same ids as database
-        for item in database[t]:
-            cluster[current_label].add(int(item))
+    if clustering_method == 'k_means':
+        for t in trans_vects:
+            trans_D, trans_I = trans_clusters.index.search(trans_vects[t].reshape(1, dim), 1)
+            current_label = base_label_trans_item + str(trans_I[0, 0])
+            if current_label not in cluster:
+                cluster[current_label] = set()
+            ## centroids/trans_vects share the same ids as database
+            for item in database[t]:
+                cluster[current_label].add(int(item))
+    elif clustering_method == 'hdbscan':
+        idx = 0
+        for t in sorted(trans_vects):
+            ## we force to iterate in the same order than trans_clusters.labels_
+            ## and we asign the appropiate idx position label
+            current_label = base_label_trans_item + str(trans_clusters.labels_[idx])
+            if current_label not in cluster:
+                cluster[current_label] = set()
+                ## centroids/trans_vects share the same ids as database
+            for item in database[t]:
+                cluster[current_label].add(int(item))
+            idx += 1
     return cluster
 
 ## finally, we build the clusters accordingly from the transaction vectors
-def trans_labelling_from_trans_vects(database, trans_vects, trans_kmeans, dim):
+def trans_labelling_from_trans_vects(database, trans_vects, trans_clusters, dim, clustering_method):
     cluster = {}
     base_label_trans_item = 'trans_clust_'
-    for t in trans_vects:
-        trans_D, trans_I = trans_kmeans.index.search(trans_vects[t].reshape(1, dim), 1)
-        current_label = base_label_trans_item + str(trans_I[0, 0])
-        if current_label not in cluster:
-            cluster[current_label] = []
-        ## centroids/trans_vects share the same ids as database
-        cluster[current_label].append(database[t])
+    if clustering_method == 'k_means':
+        for t in trans_vects:
+            trans_D, trans_I = trans_clusters.index.search(trans_vects[t].reshape(1, dim), 1)
+            current_label = base_label_trans_item + str(trans_I[0, 0])
+            if current_label not in cluster:
+                cluster[current_label] = []
+            ## centroids/trans_vects share the same ids as database
+            cluster[current_label].append(database[t])
+    elif clustering_method == 'hdbscan':
+        idx = 0
+        # we force the iteration to be in the same order as the trans_clusters.labels_
+        for t in sorted(trans_vects):
+            current_label = base_label_trans_item + str(trans_clusters.labels_[idx])
+            if current_label not in cluster:
+                cluster[current_label] = []
+            ## centroids/trans_vects share the same ids as database
+            cluster[current_label].append(database[t])
+            idx += 1
     return cluster
 
 
-def trans_labelling_from_trans_vects_normalizing(database, trans_vects, trans_kmeans, dim):
-    cluster = {}
-    base_label_trans_item = 'trans_clust_'
-    for t in trans_vects:
-        trans_D, trans_I = trans_kmeans.index.search(preprocessing.normalize(trans_vects[t].reshape(1, dim)), 1)
-        current_label = base_label_trans_item + str(trans_I[0, 0])
-        if current_label not in cluster:
-            cluster[current_label] = []
-        ## centroids/trans_vects share the same ids as database
-        cluster[current_label].append(database[t])
-    return cluster
+# def trans_labelling_from_trans_vects_normalizing(database, trans_vects, trans_kmeans, dim):
+#     cluster = {}
+#     base_label_trans_item = 'trans_clust_'
+#     for t in trans_vects:
+#         trans_D, trans_I = trans_kmeans.index.search(preprocessing.normalize(trans_vects[t].reshape(1, dim)), 1)
+#         current_label = base_label_trans_item + str(trans_I[0, 0])
+#         if current_label not in cluster:
+#             cluster[current_label] = []
+#         ## centroids/trans_vects share the same ids as database
+#         cluster[current_label].append(database[t])
+#     return cluster
 
 ## We randomly split transaction database
 def trans_labelling_random(database, k):
@@ -194,7 +228,7 @@ def convert_database_db_to_dat(database, table, output_filename):
 ## either at item embedding or at transaction embedding level
 ## for the time being everything is done in memory
 ## TODO: process each line at a time
-def split_database_items(database, database_name, clusters):
+def split_database_items(database, database_name, clusters, itemTrans):
     ## we create an in-memory database for each cluster
     ## the items currently are stored in the DB as strings as they are tokens for the
     ## word embedding
@@ -209,8 +243,14 @@ def split_database_items(database, database_name, clusters):
         [in_mem_splitting[label].append(database[i]) for label in clusters if
          len(aux_set.intersection(clusters[label])) != 0]
 
+    if not os.path.exists('output_databases'):
+        os.mkdir('output_databases')
+        print("Directory output_databases Created ")
+    else:
+        print("Directory output_databases already exists")
+
     for label in clusters:
-        with open(os.path.join('databases', database_name[:-4] + '_' + label + '_k' + str(k) + '.dat'), mode='wt',
+        with open(os.path.join('output_databases', ntpath.basename(database_name) + '_' + str(label) + '_k' + str(k) + '.dat'), mode='wt',
                   encoding='UTF-8') as file:
             for trans in in_mem_splitting[label]:
                 [file.write(f'{item} ') for item in trans]
@@ -226,7 +266,7 @@ def split_database_transactions(database_name, clusters):
     ## the splitting has been already done, and they just give clusters of transactions
     k = len(clusters)
     for label in clusters:
-        with open(os.path.join('output_databases', ntpath.basename(database_name)[:-4] + '_' + str(label) + '_k' + str(k) + '.dat'), mode='wt',
+        with open(os.path.join('output_databases', ntpath.basename(database_name) + '_' + str(label) + '_k' + str(k) + '.dat'), mode='wt',
                   encoding='UTF-8') as file:
             for trans in clusters[label]:
                 [file.write(f'{item} ') for item in trans]
@@ -241,18 +281,14 @@ def split_database_transactions_translating(database_name, clusters, table):
     ## the splitting has been already done, and they just give clusters of transactions
     k = len(clusters)
     for label in clusters:
-        with open(os.path.join('output_databases', ntpath.basename(database_name)[:-4] + '_' + str(label) + '_k' + str(k) + '.dat'), mode='wt',
+        with open(os.path.join('output_databases', ntpath.basename(database_name) + '_' + str(label) + '_k' + str(k) + '.dat'), mode='wt',
                   encoding='UTF-8') as file:
             for trans in clusters[label]:
                 [file.write(f'{table[int(item)]} ') for item in trans]
                 file.write('\n')
 
 if __name__ == "__main__":
-    # params: -database file_without_extension
-    #               file + '.db' will be the name of the file containing the database
-    #               file + '.analysis.txt' will be the name of the file of the analysis file
-    #               file + '.vect' will be the name of the file storing the vectors
-    #               file + '-latest-SLIM.ct' will be the name of the code table
+    # params: -database filename of the extension
     #           -clustering k_means | fuzzy_k_means | hdbscan
     #           -granularity transaction | item
     #               clustering applied at item level or at transaction level (vertical or horizontal partitioning)
@@ -304,13 +340,18 @@ if __name__ == "__main__":
     normalized_centroids = calculate_normalized_centroids(model, database_transactions)
     print(f'normalized centroids calculated in {time.time() - start_time} s.')
 
+    ## to avoid losing the linking information about the vector and its centroid,
+    ## we force the array vects to be sorted regarding the labels of the dict
+    ## There are clustering objects that do not allow to label new items regarding
+    ## the clustering as faiss.kmeans does, so we need to keep track of it
     if args.granularity == 'item' and not args.clustering == 'random':
-        vects = [labelled_vects[label] for label in labelled_vects]
+        vects = [labelled_vects[label] for label in sorted(labelled_vects)]
+        print(vects[0].shape)
     else:
         if args.normalize:
-            vects = [normalized_centroids[c] for c in normalized_centroids]
+            vects = [normalized_centroids[c] for c in sorted(normalized_centroids)]
         else:
-            vects = [centroids[c] for c in centroids]
+            vects = [centroids[c] for c in sorted(centroids)]
 
     # Note that we might want to normalize the item vectors and we are not pre-calculating
     # them, that's why I've kept the option
@@ -318,24 +359,33 @@ if __name__ == "__main__":
         clustering = cluster_data(args.clustering, vects, args.num_clusters, args.normalize)
 
         if args.granularity == 'item':
-            trans_cluster = item_labelling_from_item_vects(vects, clustering, vector_dimension)
+            trans_cluster = item_labelling_from_item_vects(vects, clustering, vector_dimension, args.clustering)
         else:
             if args.itemTrans:
                 # this is just a test: clustering the transactions by the items participating the transaction clusters
                 # crisp partition
-                trans_cluster = item_labelling_from_trans_vects(database_transactions, centroids, clustering, vector_dimension)
+                trans_cluster = item_labelling_from_trans_vects(database_transactions, centroids, clustering, vector_dimension, args.clustering)
             else:
-                trans_cluster = trans_labelling_from_trans_vects(database_transactions, centroids, clustering, vector_dimension)
+                trans_cluster = trans_labelling_from_trans_vects(database_transactions, centroids, clustering, vector_dimension, args.clustering)
     else:
         ## random
         trans_cluster = trans_labelling_random(database_transactions, args.num_clusters)
 
-    if args.database_file.endswith('.db'):
-        ## we need to translate back the database if it's in Vreeken's format
-        translation_table = tdb.read_analysis_table(args.database_file+'.analysis.txt')
-        split_database_transactions_translating(args.database_file[:-3]+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters),
-                                                trans_cluster,
-                                                translation_table)
-    else:
-        split_database_transactions(args.database_file[:-4]+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters),
-                                                trans_cluster)
+    if args.granularity == 'item' or args.itemTrans:
+        if (args.database_file.endswith('.db')):
+            aux_db_name = args.database_file[:-3]
+        else:
+            aux_db_name = args.database_file[:-4]
+        split_database_items(database_transactions, aux_db_name+'_'+args.granularity+'_'+str(args.itemTrans)+'_'
+                             +args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+                             trans_cluster, args.itemTrans)
+    elif args.granularity == 'transaction':
+        if args.database_file.endswith('.db'):
+            ## we need to translate back the database if it's in Vreeken's format
+            translation_table = tdb.read_analysis_table(args.database_file+'.analysis.txt')
+            split_database_transactions_translating(args.database_file[:-3]+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+                                                    trans_cluster,
+                                                    translation_table)
+        else:
+            split_database_transactions(args.database_file[:-4]+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+                                                    trans_cluster)

@@ -135,8 +135,8 @@ if __name__ == "__main__":
 
         out_name = fname + '_'+str(args.dim)+'_'+str(args.win)+'_'+str(args.epochs)+'_'+args.alg+'.vect'
         # we force min_count to 1 in order not to miss any item
-        model = gensim.models.Word2Vec(size=args.dim, workers=args.workers, window=args.win,
-                                    sg=(1 if args.alg == 'sg' else 0), negative=15, iter=args.epochs, min_count=1)
+        model = gensim.models.Word2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
+                                    sg=(1 if args.alg == 'sg' else 0), negative=15, epochs=args.epochs, min_count=1)
         model.build_vocab(sentences, progress_per=10000)
         start_time = time.time()
         model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs, report_delay=1)
