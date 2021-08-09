@@ -4,4 +4,5 @@ python sid/PartMining/DatabaseCompressionCalculator.py ^
  -codetable_basename %2 ^
  -num_tables %3 ^
  -table_idx %4 ^
- %5 
+ -pruning_threshold %5 ^
+ %6

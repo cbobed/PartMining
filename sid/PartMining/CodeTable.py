@@ -47,9 +47,13 @@ def build_SCT(database):
 def convert_int_codetable (codetable, analysis_table):
     converted = {}
     for label in codetable:
-        translated_code = [ analysis_table[int(item)] for item in codetable[label]['code']]
-        converted[label] = {'code_int':translated_code,
-                            'code_set':set(translated_code)}
+        translated_code = [analysis_table[int(item)] for item in codetable[label]['code']]
+        str_translated_code = [str(item) for item in translated_code]
+        converted[label] = {'code': str_translated_code,
+                            'code_int':translated_code,
+                            'code_set':set(translated_code),
+                            'usage':0,
+                            'support':0}
     return converted
 
 
