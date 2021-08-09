@@ -113,6 +113,11 @@ def calculate_size_database_from_codetable(codetable):
             size += codetable[label]['usage'] * num_bits
     return size
 
+def prune_by_usage_threshold(codetable, threshold):
+    return {i:{'code':codetable[i]['code'],
+           'support':0,
+           'usage':0,
+           'code_set':codetable[i]['code_set']} for i in codetable if codetable[i]['usage'] > threshold or len(codetable[i]['code']) == 1}
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
@@ -139,6 +144,8 @@ if __name__ == "__main__":
     ## REQUIRED
     my_parser.add_argument('-all_ratios', action='store_true', required=False,
                                help="calculate all the partial ratios, default: False", default=False)
+    my_parser.add_argument('-pruning_threshold', action='store', type=int, required=False,
+                           help="establish a threshold to prune some codes according to their usage", default=0)
 
     ## Second group :: calculate single ratios
     ## REQUIRED
@@ -150,32 +157,23 @@ if __name__ == "__main__":
 
     args=my_parser.parse_args()
     if not args.merge_codetables:
-        db_dat_table, dat_db_table = ct.read_analysis_table_bidir(args.analysis_file)
+        db_dat_table, dat_db_table = tdb.read_analysis_table_bidir(args.analysis_file)
         # we calculate the compression regarding the original .dat database
+        # codetables are in Vreekens "space"
         codetable = ct.read_codetable(args.codetable_file, True)
         converted_codetable = ct.convert_int_codetable(codetable, db_dat_table)
+        #converted should be in .dat space
         dat_database = tdb.read_database_dat(args.database_file)
 
-        #some checks to compare to the notebook
-        print(len(converted_codetable))
-        print(converted_codetable[0])
-        print(codetable[0])
-
-        #converted_orig_codetable = ct.merge_codetables([converted_codetable])
+        #converted_codetable = ct.merge_codetables([converted_codetable])
         calculate_codetable_support(dat_database, converted_codetable)
         converted_codetable_sco = codetable_in_standard_cover_order(converted_codetable)
-
-        # some checks to compare to the notebook
-        print(len(converted_codetable))
-        print(converted_codetable['0_1'])
-        print(converted_codetable_sco[0])
 
         calculate_codetable_usage(dat_database, converted_codetable_sco)
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database)
         sct_codetable_sco = codetable_in_standard_cover_order(sct_codetable)
-
         ct_compressed_size = calculate_size_database_from_codetable(converted_codetable_sco)
         sct_compressed_size = calculate_size_database_from_codetable(sct_codetable_sco)
 
@@ -187,6 +185,7 @@ if __name__ == "__main__":
 
         for i in range(args.table_idx, args.num_tables+args.table_idx):
             current_name = args.codetable_basename+'_'+str(i)+'_k'+str(args.num_tables)
+            print(f'processing {current_name}...')
             aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
             aux_codetable = ct.read_codetable(current_name+'.ct', True)
             aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
@@ -194,8 +193,11 @@ if __name__ == "__main__":
 
             if (args.all_ratios):
                 aux_dat_database = tdb.read_database_dat(current_name+'.dat')
-                calculate_codetable_support(aux_dat_database, aux_codetable)
-                aux_codetable_sco = codetable_in_standard_cover_order(aux_codetable)
+
+                calculate_codetable_support(aux_dat_database, aux_converted_codetable)
+                aux_codetable_sco = codetable_in_standard_cover_order(aux_converted_codetable)
+                calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
+
                 aux_sct_codetable = ct.build_SCT(aux_dat_database)
                 aux_sct_codetable_sco = codetable_in_standard_cover_order(aux_sct_codetable)
                 aux_size = calculate_size_database_from_codetable(aux_codetable_sco)
@@ -211,6 +213,7 @@ if __name__ == "__main__":
         print(f'merged table size: {len(converted_merged_codetable)}')
         calculate_codetable_support(dat_database, converted_merged_codetable)
         converted_merged_codetable_sco = codetable_in_standard_cover_order(converted_merged_codetable)
+        calculate_codetable_usage(dat_database, converted_merged_codetable_sco)
 
         sct_codetable = ct.build_SCT(dat_database)
         sct_codetable_sco = codetable_in_standard_cover_order(sct_codetable)
@@ -221,3 +224,12 @@ if __name__ == "__main__":
         print(f'merged size: {merged_size}')
         print(f'sct size: {sct_size}')
         print(f'merged ratio: {merged_ratio}')
+
+        if args.pruning_threshold != 0:
+            pruned_merged_codetable = prune_by_usage_threshold(converted_merged_codetable_sco, args.pruning_threshold)
+            calculate_codetable_support(dat_database, pruned_merged_codetable)
+            pruned_merged_codetable_sco = codetable_in_standard_cover_order(pruned_merged_codetable)
+            calculate_codetable_usage(dat_database, pruned_merged_codetable_sco)
+            pruned_merged_size = calculate_size_database_from_codetable(pruned_merged_codetable_sco)
+            pruned_merged_ratio = pruned_merged_size / sct_size
+            print(f'pruned_merged_ratio:{pruned_merged_ratio}')
