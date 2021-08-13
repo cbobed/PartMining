@@ -5,4 +5,5 @@ python sid/PartMining/DatabaseCompressionCalculator.py ^
  -num_tables %3 ^
  -table_idx %4 ^
  -pruning_threshold %5 ^
- %6
+ -merge_method %6 ^
+ %7

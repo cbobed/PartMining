@@ -17,9 +17,9 @@ import CodeTable as ct
 import argparse
 import time
 
-
-
 ## Methods to calculate the covers, support, usage
+
+PARALLEL = False
 
 def calculate_cover(transaction, code_table):
     item_set = set(transaction)
@@ -52,7 +52,7 @@ def calculate_transaction_cover(transaction, codetable):
     return codes
 
 
-def calculate_codetable_support(database, codetable):
+def calculate_codetable_support(database, codetable, parallelize=False):
     # to speed up the calculations, we augment the codetable with the set version of the code
     for label in codetable:
         codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
@@ -69,7 +69,7 @@ def calculate_codetable_support(database, codetable):
 
 
 ## Note that I cannot do it until I have the codetable
-def calculate_codetable_usage(database, codetable):
+def calculate_codetable_usage(database, codetable,  parallelize=False):
     for label in codetable:
         codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
 
@@ -125,6 +125,8 @@ if __name__ == "__main__":
     my_parser.add_argument('-database_file', action='store', required=True,
                            help="file of the database (must be the .dat)")
 
+    my_parser.add_argument('-parallel', action='store_true', required=False,
+                           help="try to paralellize the computations at different points, default: False", default=False)
     ## argparse does not fully support subgroups, you have to do it with
     ## subparsers ... overkilling, I leave all the parameters in the wild living free
     ## the mutual exclusion is achieved by code exploring in this case
@@ -141,11 +143,14 @@ if __name__ == "__main__":
                                help="number of tables to be merged")
     my_parser.add_argument('-table_idx', action='store', type=int, required=False,
                                help='idx to start counting tables - hbscan sometimes starts at 0', default=0)
+    my_parser.add_argument('-merge_method', action='store', choices=['naive', 'pruning'], required=False,
+                           help="method to be applied to merge the code tables, default: naive", default='naive')
     ## REQUIRED
     my_parser.add_argument('-all_ratios', action='store_true', required=False,
                                help="calculate all the partial ratios, default: False", default=False)
     my_parser.add_argument('-pruning_threshold', action='store', type=int, required=False,
                            help="establish a threshold to prune some codes according to their usage", default=0)
+
 
     ## Second group :: calculate single ratios
     ## REQUIRED
@@ -189,15 +194,25 @@ if __name__ == "__main__":
             aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
             aux_codetable = ct.read_codetable(current_name+'.ct', True)
             aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
-            codetables.append(aux_converted_codetable)
 
-            if (args.all_ratios):
-                aux_dat_database = tdb.read_database_dat(current_name+'.dat')
+
+            if (args.all_ratios or args.merge_method=='pruning'):
+                # we need to calculate the local supports and usages
+                aux_dat_database = tdb.read_database_dat(current_name + '.dat')
 
                 calculate_codetable_support(aux_dat_database, aux_converted_codetable)
+                print(f'num codes: {len(aux_codetable)}')
+                print(f'codes with support 0: {[x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0]}')
                 aux_codetable_sco = codetable_in_standard_cover_order(aux_converted_codetable)
                 calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
+                print(f'codes with usage 0: {[x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0]}')
 
+                codetables.append(aux_codetable_sco)
+            else:
+                codetables.append(aux_converted_codetable)
+
+            if (args.all_ratios):
+                # This must be only done if we are calculating the ratios
                 aux_sct_codetable = ct.build_SCT(aux_dat_database)
                 aux_sct_codetable_sco = codetable_in_standard_cover_order(aux_sct_codetable)
                 aux_size = calculate_size_database_from_codetable(aux_codetable_sco)
@@ -209,7 +224,13 @@ if __name__ == "__main__":
         print(f'number of codetables: {len(codetables)}')
         for c in codetables:
             print(f'size: {len(c)}')
-        converted_merged_codetable = ct.merge_codetables(codetables)
+
+        if args.merge_method == 'naive':
+            converted_merged_codetable = ct.merge_codetables_naive(codetables)
+        elif args.merge_method == 'pruning':
+            converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
+
+
         print(f'merged table size: {len(converted_merged_codetable)}')
         calculate_codetable_support(dat_database, converted_merged_codetable)
         converted_merged_codetable_sco = codetable_in_standard_cover_order(converted_merged_codetable)
