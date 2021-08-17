@@ -17,116 +17,12 @@ import CodeTable as ct
 import argparse
 import time
 
-## Methods to calculate the covers, support, usage
-
-PARALLEL = False
-
-def calculate_cover(transaction, code_table):
-    item_set = set(transaction)
-    codes = []
-    current_code = 0
-    while (len(item_set) != 0 and current_code < len(code_table) ):
-        aux_code_set = set(code_table[current_code]['code'])
-        if (aux_code_set.issubset(item_set)):
-            codes.append(current_code)
-            item_set.difference_update(aux_code_set)
-        current_code+=1
-    return codes
-
-# Reminder:
-# Standard cover order
-# |X|↓ suppD(X) ↓ lexicographically ↑
-# Standard candidate order
-# suppD(X) ↓|X|↓ lexicographically ↑
-
-def calculate_transaction_cover(transaction, codetable):
-    item_set = set(transaction)
-    codes = []
-    current_code = 0
-    while (len(item_set) != 0 and current_code < len(codetable)):
-        aux_code_set = set(codetable[current_code]['code'])
-        if (aux_code_set.issubset(item_set)):
-            codes.append(current_code)
-            item_set.difference_update(aux_code_set)
-        current_code += 1
-    return codes
-
-
-def calculate_codetable_support(database, codetable, parallelize=False):
-    # to speed up the calculations, we augment the codetable with the set version of the code
-    for label in codetable:
-        codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
-
-    for trans in database:
-        item_set = set([int(item) for item in database[trans]])
-        ## we have to check all the codes in the code table
-        ## this might be expensive ... we could just get the sum of the supports in the different databases
-        ## note that this is additive so in a better implementation it wouldn't be a problem
-        for label in codetable:
-            ## if the intersection of the code is complete with the transaction
-            if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
-                codetable[label]['support'] += 1
-
-
-## Note that I cannot do it until I have the codetable
-def calculate_codetable_usage(database, codetable,  parallelize=False):
-    for label in codetable:
-        codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
-
-    for trans in database:
-        remaining_item_set = set([int(item) for item in database[trans]])
-        current_code = 0
-        while len(remaining_item_set) != 0 and current_code < len(codetable):
-            if len(codetable[current_code]['code_set'].intersection(remaining_item_set)) == len(
-                    codetable[current_code]['code_set']):
-                codetable[current_code]['usage'] += 1
-                remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
-            current_code += 1
-
-        if len(remaining_item_set) != 0:
-            print('This codetable is not covering properly the database ... is the SCT added?')
-
-
-def codetable_in_standard_cover_order(codetable):
-    # we have to be careful with singleton codes (strings) ... if they have more than one char, they were
-    # getting innerly sorted
-    return {idx: {
-        'code': sorted(codetable[label]['code']) if not isinstance(codetable[label]['code'], str) else codetable[label][
-            'code'],
-        'support': codetable[label]['support'],
-        'usage': codetable[label]['usage']}
-            for idx, label in enumerate(sorted(codetable.keys(), reverse=True,
-                                               key=lambda x: (
-                                               len(codetable[x]['code']) if not isinstance(codetable[x]['code'],
-                                                                                           str) else 1
-                                               , codetable[x]['support'])),
-                                        start=0)}
-
-def calculate_size_database_from_codetable(codetable):
-    sum_usage = 0
-    size = 0.0
-    for label in codetable:
-        sum_usage += codetable[label]['usage']
-    for label in codetable:
-        if (codetable[label]['usage'] != 0):
-            num_bits = -math.log(codetable[label]['usage'] / sum_usage)
-            size += codetable[label]['usage'] * num_bits
-    return size
-
-def prune_by_usage_threshold(codetable, threshold):
-    return {i:{'code':codetable[i]['code'],
-           'support':0,
-           'usage':0,
-           'code_set':codetable[i]['code_set']} for i in codetable if codetable[i]['usage'] > threshold or len(codetable[i]['code']) == 1}
-
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
 
     my_parser.add_argument('-database_file', action='store', required=True,
                            help="file of the database (must be the .dat)")
 
-    my_parser.add_argument('-parallel', action='store_true', required=False,
-                           help="try to paralellize the computations at different points, default: False", default=False)
     ## argparse does not fully support subgroups, you have to do it with
     ## subparsers ... overkilling, I leave all the parameters in the wild living free
     ## the mutual exclusion is achieved by code exploring in this case
@@ -171,16 +67,16 @@ if __name__ == "__main__":
         dat_database = tdb.read_database_dat(args.database_file)
 
         #converted_codetable = ct.merge_codetables([converted_codetable])
-        calculate_codetable_support(dat_database, converted_codetable)
-        converted_codetable_sco = codetable_in_standard_cover_order(converted_codetable)
+        ct.calculate_codetable_support(dat_database, converted_codetable)
+        converted_codetable_sco = ct.codetable_in_standard_cover_order(converted_codetable)
 
-        calculate_codetable_usage(dat_database, converted_codetable_sco)
+        ct.calculate_codetable_usage(dat_database, converted_codetable_sco)
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database)
-        sct_codetable_sco = codetable_in_standard_cover_order(sct_codetable)
-        ct_compressed_size = calculate_size_database_from_codetable(converted_codetable_sco)
-        sct_compressed_size = calculate_size_database_from_codetable(sct_codetable_sco)
+        sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
+        ct_compressed_size = ct.calculate_size_database_from_codetable(converted_codetable_sco)
+        sct_compressed_size = ct.calculate_size_database_from_codetable(sct_codetable_sco)
 
         ratio = ct_compressed_size / sct_compressed_size
         print(f'ratio: {ratio}')
@@ -200,11 +96,11 @@ if __name__ == "__main__":
                 # we need to calculate the local supports and usages
                 aux_dat_database = tdb.read_database_dat(current_name + '.dat')
 
-                calculate_codetable_support(aux_dat_database, aux_converted_codetable)
+                ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable)
                 print(f'num codes: {len(aux_codetable)}')
                 print(f'codes with support 0: {[x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0]}')
-                aux_codetable_sco = codetable_in_standard_cover_order(aux_converted_codetable)
-                calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
+                aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
+                ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
                 print(f'codes with usage 0: {[x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0]}')
 
                 codetables.append(aux_codetable_sco)
@@ -214,9 +110,9 @@ if __name__ == "__main__":
             if (args.all_ratios):
                 # This must be only done if we are calculating the ratios
                 aux_sct_codetable = ct.build_SCT(aux_dat_database)
-                aux_sct_codetable_sco = codetable_in_standard_cover_order(aux_sct_codetable)
-                aux_size = calculate_size_database_from_codetable(aux_codetable_sco)
-                aux_sct_size = calculate_size_database_from_codetable(aux_sct_codetable_sco)
+                aux_sct_codetable_sco = ct.codetable_in_standard_cover_order(aux_sct_codetable)
+                aux_size = ct.calculate_size_database_from_codetable(aux_codetable_sco)
+                aux_sct_size = ct.calculate_size_database_from_codetable(aux_sct_codetable_sco)
                 aux_ratio = aux_size / aux_sct_size
                 print(f'Partition {i} ratio: {aux_ratio}')
 
@@ -232,25 +128,25 @@ if __name__ == "__main__":
 
 
         print(f'merged table size: {len(converted_merged_codetable)}')
-        calculate_codetable_support(dat_database, converted_merged_codetable)
-        converted_merged_codetable_sco = codetable_in_standard_cover_order(converted_merged_codetable)
-        calculate_codetable_usage(dat_database, converted_merged_codetable_sco)
+        ct.calculate_codetable_support(dat_database, converted_merged_codetable)
+        converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
+        ct.calculate_codetable_usage(dat_database, converted_merged_codetable_sco)
 
         sct_codetable = ct.build_SCT(dat_database)
-        sct_codetable_sco = codetable_in_standard_cover_order(sct_codetable)
+        sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
 
-        merged_size = calculate_size_database_from_codetable(converted_merged_codetable_sco)
-        sct_size = calculate_size_database_from_codetable(sct_codetable_sco)
+        merged_size = ct.calculate_size_database_from_codetable(converted_merged_codetable_sco)
+        sct_size = ct.calculate_size_database_from_codetable(sct_codetable_sco)
         merged_ratio = merged_size / sct_size
         print(f'merged size: {merged_size}')
         print(f'sct size: {sct_size}')
         print(f'merged ratio: {merged_ratio}')
 
         if args.pruning_threshold != 0:
-            pruned_merged_codetable = prune_by_usage_threshold(converted_merged_codetable_sco, args.pruning_threshold)
-            calculate_codetable_support(dat_database, pruned_merged_codetable)
-            pruned_merged_codetable_sco = codetable_in_standard_cover_order(pruned_merged_codetable)
-            calculate_codetable_usage(dat_database, pruned_merged_codetable_sco)
-            pruned_merged_size = calculate_size_database_from_codetable(pruned_merged_codetable_sco)
+            pruned_merged_codetable = ct.prune_by_usage_threshold(converted_merged_codetable_sco, args.pruning_threshold)
+            ct.calculate_codetable_support(dat_database, pruned_merged_codetable)
+            pruned_merged_codetable_sco = ct.codetable_in_standard_cover_order(pruned_merged_codetable)
+            ct.calculate_codetable_usage(dat_database, pruned_merged_codetable_sco)
+            pruned_merged_size = ct.calculate_size_database_from_codetable(pruned_merged_codetable_sco)
             pruned_merged_ratio = pruned_merged_size / sct_size
             print(f'pruned_merged_ratio:{pruned_merged_ratio}')
