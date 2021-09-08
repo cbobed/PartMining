@@ -26,7 +26,7 @@ set OUTPUT_SPLITTED_PATH=%PYTHON_PROJECT_PATH%\output_databases
 :: configuration of the first script to obtain the vectors 
 set DIMENSION=200
 set WIN_SIZE=5
-set EPOCHS=20
+set EPOCHS=5
 set WORKERS=8
 :: set ORD to force that the transactions are ordered centering the most 
 :: 	supported items in the middle => it requires .db format to have the 
@@ -40,7 +40,7 @@ set GRANULARITY=transaction
 set NUM_CLUSTERS=8
 :: set NORMALIZE to -normalize if we want to normalize the vectors
 set NORMALIZE=
-set PRUNING_THRESHOLD=10
+set PRUNING_THRESHOLD=
 
 
 :: configuration of the third script
