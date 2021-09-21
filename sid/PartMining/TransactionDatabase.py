@@ -55,6 +55,7 @@ def read_analysis_table (filename):
 def read_analysis_table_bidir (filename):
     db_dat_table = {}
     dat_db_table = {}
+    extra_item_position_db = -1
     with open(filename, mode='rt', encoding='UTF-8') as file:
         # skip the first  lines
         for i in range(15):

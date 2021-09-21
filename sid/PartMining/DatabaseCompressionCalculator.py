@@ -16,8 +16,10 @@ import TransactionDatabase as tdb
 import CodeTable as ct
 import argparse
 import time
+import logging
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
 
     my_parser.add_argument('-database_file', action='store', required=True,
@@ -91,17 +93,19 @@ if __name__ == "__main__":
             aux_codetable = ct.read_codetable(current_name+'.ct', True)
             aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
 
-
             if (args.all_ratios or args.merge_method=='pruning'):
                 # we need to calculate the local supports and usages
                 aux_dat_database = tdb.read_database_dat(current_name + '.dat')
 
                 ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable)
                 print(f'num codes: {len(aux_codetable)}')
-                print(f'codes with support 0: {[x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0]}')
+                print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
+                for x in aux_converted_codetable:
+                    if aux_converted_codetable[x]["support"] == 0:
+                        print(f'code with support 0: {aux_converted_codetable[x]}')
                 aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
                 ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
-                print(f'codes with usage 0: {[x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0]}')
+                print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
 
                 codetables.append(aux_codetable_sco)
             else:
