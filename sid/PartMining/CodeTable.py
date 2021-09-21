@@ -20,6 +20,8 @@ import multiprocessing as mp
 import TransactionDatabase as tdb
 import time
 
+import logging
+
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -55,9 +57,11 @@ def build_SCT(database):
     return sct_codetable
 
 def convert_int_codetable (codetable, analysis_table):
+    ## we have to take into account that db.analysis seems to introduce the 0 item
+    ## which should never be present in the vocabularies of .dat dabases (1 .. infinity)
     converted = {}
     for label in codetable:
-        translated_code = [analysis_table[int(item)] for item in codetable[label]['code']]
+        translated_code = [analysis_table[int(item)] for item in codetable[label]['code'] if analysis_table[int(item)] != 0]
         str_translated_code = [str(item) for item in translated_code]
         converted[label] = {'code': str_translated_code,
                             'code_int':translated_code,
@@ -306,6 +310,8 @@ def merge_codetables_pruning(codetables, database):
             new_merged[label].pop('code_lengths_array')
             new_merged[label].pop('dbs')
 
+
+
     ## To prune according to KRIMP, we need the previous supports and usages
 
     calculate_codetable_support(database, new_merged)
@@ -365,10 +371,9 @@ def merge_codetables_pruning(codetables, database):
 
     print(converted_new_merged_sco.keys())
     print(f'before pruning: {calculate_size_database_from_codetable(converted_new_merged_sco)}')
-    converted_new_merged_sco.pop(150)
-    calculate_codetable_support(dat_database, converted_new_merged_sco)
+    calculate_codetable_support(database, converted_new_merged_sco)
     new_new = codetable_in_standard_cover_order(converted_new_merged_sco)
-    calculate_codetable_usage(dat_database, new_new)
+    calculate_codetable_usage(database, new_new)
     print(f'after pruning: {calculate_size_database_from_codetable(new_new)}')
 
     # we have all the previous information about the codes in merged and the new in new_merged, we have to
