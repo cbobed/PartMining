@@ -10,14 +10,16 @@
 # 	Usage: configure the execution variables,and the following 
 #		parameters are accepted: 
 # 			%1 the filename of the dataset
-# 			%2 the initial idx of the tables (usually 0) 
+#			%2 clustering method: k_means, random or hdbscan
+# 			%3 number of clusters
+# 			%4 the initial idx of the tables (usually 0) 
 #===============================================================
 
 CURRENT_PATH=`pwd`
 
 PYTHON_PROJECT_PATH=/home/siduser/cbobed/git/PartMining
-SLIM_PROJECT_PATH=/home/siduser/cbobed/...
-DATASETS_PATH=/home/siduser/cbobed/... =c:\Users\cbobed\workingDir\git\PartMining
+SLIM_PROJECT_PATH=/home/siduser/cbobed/krimp/slim
+DATASETS_PATH=/home/siduser/cbobed/git/PartMining
 OUTPUT_SPLITTED_PATH="$PYTHON_PROJECT_PATH"/output_databases
 
 #configuration of the first script to obtain the vectors 
@@ -28,9 +30,10 @@ WORKERS=4
 
 
 # configuration of the second script to split the database_name
-CLUSTERING=random
+# k_means , random
+CLUSTERING=$2
 GRANULARITY=transaction
-NUM_CLUSTERS=4
+NUM_CLUSTERS=$3
 # set NORMALIZE to -normalize if we want to normalize the vectors
 NORMALIZE=
 PRUNING_THRESHOLD=0
@@ -40,21 +43,34 @@ PRUNING_THRESHOLD=0
 ALL_RATIOS=-all_ratios
 MERGE_METHOD=naive
 
+OUTPUT_FILE="$1"-"$2"-"$3"-output.out
+ERR_FILE="$1"-"$2"-"$3"-output.err
+TIME_FILE="$1"-"$2"-"$3"-output.time
+
+# clean the outputs 
+echo "" > "$OUTPUT_FILE"
+echo "" > "$ERR_FILE"
+echo "" > "$TIME_FILE"
+
 # %1 is the filename of the dataset
 cd $PYTHON_PROJECT_PATH
-./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS
+
+if [[ $CLUSTERING != "random" ]]; then 
+	echo "calculate vectors ..." > "$TIME_FILE"
+	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
+fi
 
 # we should now have database_name+'_DIMENSION_WIN_EPOCHS_sg.vect' as name of the model
 MODEL_FILE="$1"_"$DIMENSION"_"$WIN_SIZE"_"$EPOCHS"_sg.vect
 echo $MODEL_FILE
 
-./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE
+echo "split database ... " >> "$TIME_FILE"
+{ time ./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 # depending on the granularity we can have different names
 
 #Transactions: we should have in output_databases => 
 #  dbBasename_GRANULARITY_CLUSTERING_DIMENSIONd_kNUM_CLUSTERS_[True|False]Norm * 
-for /F %%i in ("%1") do set DB_BASENAME=%%~ni
 
 DB_BASENAME=${1/.dat/}
 
@@ -82,7 +98,9 @@ cd $SLIM_PROJECT_PATH
 
 for db in "$SPLITTED_BASENAME"*.dat; do 
 	LOCAL_BASENAME=${db/.dat/}
-	./obtainCT-SLIM2012.sh $LOCAL_BASENAME
+	
+	echo "mining $LOCAL_BASENAME ... " >> "$PYTHON_PROJECT_PATH"/"$TIME_FILE"
+	{ time ./obtainCT-SLIM2012.sh $LOCAL_BASENAME >> "$PYTHON_PROJECT_PATH"/"$OUTPUT_FILE" 2>>"$PYTHON_PROJECT_PATH"/"$ERR_FILE" ; } 2>>"$PYTHON_PROJECT_PATH"/"$TIME_FILE"
 	# now, in LOCAL_BASENAME-output we have the codetable and the analysis file
 	cp "$LOCAL_BASENAME"-output/ct-latest.ct "$OUTPUT_SPLITTED_PATH"/"$LOCAL_BASENAME".ct
 	cp "$LOCAL_BASENAME"-output/"$LOCAL_BASENAME".db.analysis.txt "$OUTPUT_SPLITTED_PATH"
@@ -95,8 +113,9 @@ for db in "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"*.dat; do
 	(( ACTUAL_NUM_CLUSTER = ACTUAL_NUM_CLUSTER + 1 ))
 done 
 
-# %2 is going to be the initial index 
+# $4 is going to be the initial index 
 echo We have "$ACTUAL_NUM_CLUSTER" clusters
-./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $2 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS"
+echo "calculating merged ratio ..." >> "$TIME_FILE"
+{ time ./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $4 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS" >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 cd "$CURRENT_PATH"
