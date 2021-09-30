@@ -27,7 +27,6 @@ if __name__ == "__main__":
         database_transactions = tdb.read_database_db(args.database_file)
     elif (args.database_file.endswith('.dat')):
         database_transactions = tdb.read_database_dat(args.database_file)
-    print(f'Database loaded in {time.time() - start_time} s.')
 
     ## dict to get all the item counts
     item_count = {}
