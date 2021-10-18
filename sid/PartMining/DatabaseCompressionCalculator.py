@@ -36,6 +36,9 @@ if __name__ == "__main__":
     ## REQUIRED
     my_parser.add_argument('-codetable_basename', action='store', required=False,
                                help="basename of the files of the codetables to be merged")
+
+    my_parser.add_argument('-parallel', action='store_true', required=False,
+                           help="flag to use the parallel version of calculating support and usage", default=False )
     ## REQUIRED
     my_parser.add_argument('-num_tables', action='store', type=int, required=False,
                                help="number of tables to be merged")
@@ -59,6 +62,7 @@ if __name__ == "__main__":
                            help="file with the code table to analyse the compression")
 
     args=my_parser.parse_args()
+    start_time = time.time()
     if not args.merge_codetables:
         db_dat_table, dat_db_table = tdb.read_analysis_table_bidir(args.analysis_file)
         # we calculate the compression regarding the original .dat database
@@ -69,10 +73,10 @@ if __name__ == "__main__":
         dat_database = tdb.read_database_dat(args.database_file)
 
         #converted_codetable = ct.merge_codetables([converted_codetable])
-        ct.calculate_codetable_support(dat_database, converted_codetable)
+        ct.calculate_codetable_support(dat_database, converted_codetable, args.parallel)
         converted_codetable_sco = ct.codetable_in_standard_cover_order(converted_codetable)
 
-        ct.calculate_codetable_usage(dat_database, converted_codetable_sco)
+        ct.calculate_codetable_usage(dat_database, converted_codetable_sco, args.parallel)
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database)
@@ -97,14 +101,14 @@ if __name__ == "__main__":
                 # we need to calculate the local supports and usages
                 aux_dat_database = tdb.read_database_dat(current_name + '.dat')
 
-                ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable)
+                ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable, args.parallel)
                 print(f'num codes: {len(aux_codetable)}')
                 print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
                 for x in aux_converted_codetable:
                     if aux_converted_codetable[x]["support"] == 0:
                         print(f'code with support 0: {aux_converted_codetable[x]}')
                 aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
-                ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco)
+                ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco, args.parallel)
                 print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
 
                 codetables.append(aux_codetable_sco)
@@ -132,9 +136,9 @@ if __name__ == "__main__":
 
 
         print(f'merged table size: {len(converted_merged_codetable)}')
-        ct.calculate_codetable_support(dat_database, converted_merged_codetable)
+        ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel)
         converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
-        ct.calculate_codetable_usage(dat_database, converted_merged_codetable_sco)
+        ct.calculate_codetable_usage(dat_database, converted_merged_codetable_sco, args.parallel)
 
         sct_codetable = ct.build_SCT(dat_database)
         sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
@@ -148,9 +152,11 @@ if __name__ == "__main__":
 
         if args.pruning_threshold != 0:
             pruned_merged_codetable = ct.prune_by_usage_threshold(converted_merged_codetable_sco, args.pruning_threshold)
-            ct.calculate_codetable_support(dat_database, pruned_merged_codetable)
+            ct.calculate_codetable_support(dat_database, pruned_merged_codetable, args.parallel)
             pruned_merged_codetable_sco = ct.codetable_in_standard_cover_order(pruned_merged_codetable)
-            ct.calculate_codetable_usage(dat_database, pruned_merged_codetable_sco)
+            ct.calculate_codetable_usage(dat_database, pruned_merged_codetable_sco, args.parallel)
             pruned_merged_size = ct.calculate_size_database_from_codetable(pruned_merged_codetable_sco)
             pruned_merged_ratio = pruned_merged_size / sct_size
             print(f'pruned_merged_ratio:{pruned_merged_ratio}')
+    end = time.time()
+    print(f'time elapsed: {end-start_time}')

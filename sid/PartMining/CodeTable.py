@@ -10,6 +10,11 @@
 ##      as we work with sets and intersections, but it could be speeded up by using
 ##      ordered lists and use early fail exit
 # Modifications:
+#   Oct 2021: Added a parallelized version of calculate support and usage
+##      TODO: Parallel not working as the changes are not actually propagated to the
+##      main as we are using the async: it would require a global variable
+##      MUST change to synchronous parallelization, and then doing a reduce step in the
+##      main thread (should be extremely faster though).
 ##############################################################################
 
 import copy
@@ -19,6 +24,11 @@ import argparse
 import multiprocessing as mp
 import TransactionDatabase as tdb
 import time
+
+import multiprocessing as mp
+
+from multiprocessing import Lock
+import psutil as ps
 
 import logging
 
@@ -73,7 +83,10 @@ def convert_int_codetable (codetable, analysis_table):
 ### Methods related to cover and calculate sizes of a database
 ## Methods to calculate the covers, support, usage
 
+
 PARALLEL = False
+usage_lock = Lock()
+support_lock = Lock()
 
 # Reminder:
 # Standard cover order
@@ -81,51 +94,143 @@ PARALLEL = False
 # Standard candidate order
 # suppD(X) ↓|X|↓ lexicographically ↑
 
-def calculate_transaction_cover(transaction, codetable):
-    item_set = set(transaction)
-    codes = []
-    current_code = 0
-    while (len(item_set) != 0 and current_code < len(codetable)):
-        aux_code_set = set(codetable[current_code]['code'])
-        if (aux_code_set.issubset(item_set)):
-            codes.append(current_code)
-            item_set.difference_update(aux_code_set)
-        current_code += 1
-    return codes
+# def calculate_transaction_cover(transaction, codetable):
+#     item_set = set(transaction)
+#     codes = []
+#     current_code = 0
+#     while (len(item_set) != 0 and current_code < len(codetable)):
+#         aux_code_set = set(codetable[current_code]['code'])
+#         if (aux_code_set.issubset(item_set)):
+#             codes.append(current_code)
+#             item_set.difference_update(aux_code_set)
+#         current_code += 1
+#     return codes
 
-def calculate_codetable_support(database, codetable):
-
-    for label in codetable:
-        codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
-
+def calculate_transaction_support (database, codetable):
+    result = []
     for trans in database:
         item_set = set([int(item) for item in database[trans]])
-        ## we have to check all the codes in the code table
-        ## this might be expensive ... we could just get the sum of the supports in the different databases
-        ## note that this is additive so in a better implementation it wouldn't be a problem
         for label in codetable:
-            ## if the intersection of the code is complete with the transaction
             if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
-                codetable[label]['support'] += 1
+                result.append(label)
+        # we return all the labels of the codes supported by these transactions
+        # we need to reduce the data afterwards
+    return (codetable, result)
+
+def apply_transaction_support (result):
+    global support_lock
+    ## result [0] is the codetable
+    ## result [1] is the list with the codes to increase their supports
+    support_lock.acquire()
+    try:
+        # we now gather line by line the results
+        for label in result[1]:
+            result[0][label]['support'] += 1
+    finally:
+        support_lock.release()
+
+def calculate_codetable_support(database, codetable, parallel=False):
+    for label in codetable:
+        if 'code_set' not in codetable[label]:
+            codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
+        # it might not be initialized
+        codetable[label]['support'] = 0
+    if (not parallel):
+        for trans in database:
+            item_set = set([int(item) for item in database[trans]])
+            ## we have to check all the codes in the code table
+            ## this might be expensive ... we could just get the sum of the supports in the different databases
+            ## note that this is additive so in a better implementation it wouldn't be a problem
+            for label in codetable:
+                ## if the intersection of the code is complete with the transaction
+                if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
+                    codetable[label]['support'] += 1
+    else:
+        # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
+        pool = mp.Pool(ps.cpu_count(logical=False))
+        chunk_length = len(database) // ps.cpu_count(logical=False)
+        for i in range (ps.cpu_count(logical=False)):
+            lower = i*chunk_length
+            if i == (ps.cpu_count(logical=False)-1):
+                upper= len(database)
+            else:
+                upper = (i+1) * chunk_length
+            print(f'queuing {lower} to {upper}')
+            pool.apply_async(calculate_transaction_support, args=(dict(list(database.items())[lower:upper]), codetable),
+                             callback=apply_transaction_support)
+
+        pool.close()
+        pool.join()
+
+
+
+def apply_transaction_usage (result):
+    global usage_lock
+    ## result [0] is the codetable
+    ## result [1] is the list with the codes to increase their usages
+    usage_lock.acquire()
+    try:
+        # we now gather line by line the results
+        for label in result[1]:
+            result[0][label]['usage'] += 1
+    finally:
+        usage_lock.release()
 
 ## Note that I cannot do it until I have the codetable
-def calculate_codetable_usage(database, codetable):
 
-    for label in codetable:
-        codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
-
+def calculate_transaction_usage (database, codetable):
+    result = []
     for trans in database:
         remaining_item_set = set([int(item) for item in database[trans]])
         current_code = 0
         while len(remaining_item_set) != 0 and current_code < len(codetable):
             if len(codetable[current_code]['code_set'].intersection(remaining_item_set)) == len(
                     codetable[current_code]['code_set']):
-                codetable[current_code]['usage'] += 1
+                result.append(current_code)
                 remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
             current_code += 1
 
         if len(remaining_item_set) != 0:
             print('This codetable is not covering properly the database ... is the SCT added?')
+    return (codetable, result)
+
+def calculate_codetable_usage(database, codetable, parallel=False):
+    print('entering usage')
+    for label in codetable:
+        if 'code_set' not in codetable[label]:
+            codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
+        # we make sure that the usage is initialized to 0
+        codetable[label]['usage'] = 0
+    if (not parallel):
+        for trans in database:
+            remaining_item_set = set([int(item) for item in database[trans]])
+            current_code = 0
+            while len(remaining_item_set) != 0 and current_code < len(codetable):
+                if len(codetable[current_code]['code_set'].intersection(remaining_item_set)) == len(
+                        codetable[current_code]['code_set']):
+                    codetable[current_code]['usage'] += 1
+                    remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
+                current_code += 1
+
+            if len(remaining_item_set) != 0:
+                print('This codetable is not covering properly the database ... is the SCT added?')
+    else:
+        # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
+        pool = mp.Pool(ps.cpu_count(logical=False))
+        chunk_length = len(database) // ps.cpu_count(logical=False)
+        for i in range(ps.cpu_count(logical=False)):
+            lower = i * chunk_length
+            if i == (ps.cpu_count(logical=False) - 1):
+                upper = len(database)
+            else:
+                upper = (i + 1) * chunk_length
+            print(f'queuing {lower} to {upper}')
+            pool.apply_async(calculate_transaction_usage, args=(dict(list(database.items())[lower:upper]), codetable),
+                             callback=apply_transaction_usage)
+
+        pool.close()
+        pool.join()
+
 
 
 def codetable_in_standard_cover_order(codetable):
