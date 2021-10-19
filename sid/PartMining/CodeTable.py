@@ -11,10 +11,10 @@
 ##      ordered lists and use early fail exit
 # Modifications:
 #   Oct 2021: Added a parallelized version of calculate support and usage
-##      TODO: Parallel not working as the changes are not actually propagated to the
-##      main as we are using the async: it would require a global variable
-##      MUST change to synchronous parallelization, and then doing a reduce step in the
-##      main thread (should be extremely faster though).
+##      TODO: Instead of using a loop to gather all the information after the calculation,
+##      we could try to share the information across subprocesses via a Manager (might be worthy
+##      for the database, but mainly for the codetable to be updated) ->
+##      thread-safety MUST be considered
 ##############################################################################
 
 import copy
@@ -27,11 +27,11 @@ import time
 
 import multiprocessing as mp
 
-from multiprocessing import Lock
 import psutil as ps
 
 import logging
 
+NUMBER_OF_PROCESSORS=ps.cpu_count(logical=True)
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -84,10 +84,6 @@ def convert_int_codetable (codetable, analysis_table):
 ## Methods to calculate the covers, support, usage
 
 
-PARALLEL = False
-usage_lock = Lock()
-support_lock = Lock()
-
 # Reminder:
 # Standard cover order
 # |X|↓ suppD(X) ↓ lexicographically ↑
@@ -115,26 +111,17 @@ def calculate_transaction_support (database, codetable):
                 result.append(label)
         # we return all the labels of the codes supported by these transactions
         # we need to reduce the data afterwards
-    return (codetable, result)
-
-def apply_transaction_support (result):
-    global support_lock
-    ## result [0] is the codetable
-    ## result [1] is the list with the codes to increase their supports
-    support_lock.acquire()
-    try:
-        # we now gather line by line the results
-        for label in result[1]:
-            result[0][label]['support'] += 1
-    finally:
-        support_lock.release()
+    return result
 
 def calculate_codetable_support(database, codetable, parallel=False):
+    logging.debug('--> entering support')
+    logging.debug('cleaning the codetable ... ')
     for label in codetable:
         if 'code_set' not in codetable[label]:
             codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
         # it might not be initialized
         codetable[label]['support'] = 0
+    logging.debug('calculating the supports ...')
     if (not parallel):
         for trans in database:
             item_set = set([int(item) for item in database[trans]])
@@ -147,34 +134,20 @@ def calculate_codetable_support(database, codetable, parallel=False):
                     codetable[label]['support'] += 1
     else:
         # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
-        pool = mp.Pool(ps.cpu_count(logical=False))
-        chunk_length = len(database) // ps.cpu_count(logical=False)
-        for i in range (ps.cpu_count(logical=False)):
-            lower = i*chunk_length
-            if i == (ps.cpu_count(logical=False)-1):
-                upper= len(database)
-            else:
-                upper = (i+1) * chunk_length
-            print(f'queuing {lower} to {upper}')
-            pool.apply_async(calculate_transaction_support, args=(dict(list(database.items())[lower:upper]), codetable),
-                             callback=apply_transaction_support)
+        pool = mp.Pool(NUMBER_OF_PROCESSORS)
+        chunk_length = len(database) // NUMBER_OF_PROCESSORS
+        limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
+        limits.append(len(database))
+        print(f'chunks ... {limits}')
+        results = [pool.apply(calculate_transaction_support, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
+                    for i in range(NUMBER_OF_PROCESSORS)]
+        logging.debug('reducing the results ... ')
+        for result_set in results:
+            for label in result_set:
+                codetable[label]['support'] += 1
 
         pool.close()
-        pool.join()
-
-
-
-def apply_transaction_usage (result):
-    global usage_lock
-    ## result [0] is the codetable
-    ## result [1] is the list with the codes to increase their usages
-    usage_lock.acquire()
-    try:
-        # we now gather line by line the results
-        for label in result[1]:
-            result[0][label]['usage'] += 1
-    finally:
-        usage_lock.release()
+    logging.debug('<-- leaving support')
 
 ## Note that I cannot do it until I have the codetable
 
@@ -184,23 +157,28 @@ def calculate_transaction_usage (database, codetable):
         remaining_item_set = set([int(item) for item in database[trans]])
         current_code = 0
         while len(remaining_item_set) != 0 and current_code < len(codetable):
-            if len(codetable[current_code]['code_set'].intersection(remaining_item_set)) == len(
-                    codetable[current_code]['code_set']):
-                result.append(current_code)
-                remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
-            current_code += 1
+            # if len(codetable[current_code]['code_set'].intersection(remaining_item_set)) == len(
+            #         codetable[current_code]['code_set']):
+            #     result.append(current_code)
+            #     remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
 
+            if codetable[current_code]['code_set'].issubset(remaining_item_set):
+                result.append(current_code)
+                remaining_item_set.difference_update(codetable[current_code]['code_set'])
+            current_code += 1
         if len(remaining_item_set) != 0:
             print('This codetable is not covering properly the database ... is the SCT added?')
-    return (codetable, result)
+    return result
 
 def calculate_codetable_usage(database, codetable, parallel=False):
-    print('entering usage')
+    logging.debug('--> entering usage')
+    logging.debug('cleaning the codetable ... ')
     for label in codetable:
         if 'code_set' not in codetable[label]:
             codetable[label]['code_set'] = set([int(item) for item in codetable[label]['code']])
         # we make sure that the usage is initialized to 0
         codetable[label]['usage'] = 0
+    logging.debug('calculating the usages ... ')
     if (not parallel):
         for trans in database:
             remaining_item_set = set([int(item) for item in database[trans]])
@@ -216,22 +194,21 @@ def calculate_codetable_usage(database, codetable, parallel=False):
                 print('This codetable is not covering properly the database ... is the SCT added?')
     else:
         # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
-        pool = mp.Pool(ps.cpu_count(logical=False))
-        chunk_length = len(database) // ps.cpu_count(logical=False)
-        for i in range(ps.cpu_count(logical=False)):
-            lower = i * chunk_length
-            if i == (ps.cpu_count(logical=False) - 1):
-                upper = len(database)
-            else:
-                upper = (i + 1) * chunk_length
-            print(f'queuing {lower} to {upper}')
-            pool.apply_async(calculate_transaction_usage, args=(dict(list(database.items())[lower:upper]), codetable),
-                             callback=apply_transaction_usage)
+        pool = mp.Pool(NUMBER_OF_PROCESSORS)
+        chunk_length = len(database) // NUMBER_OF_PROCESSORS
+        limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
+        limits.append(len(database))
+        print(f'chunks ... {limits}')
+        results = [pool.apply(calculate_transaction_usage, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
+                    for i in range(NUMBER_OF_PROCESSORS)]
+        logging.debug('reducing the results ... ')
+        # we apply the data to the codetable
+        for result_set in results:
+            for label in result_set:
+                codetable[label]['usage'] +=1
 
         pool.close()
-        pool.join()
-
-
+    logging.debug('<--leaving usage ')
 
 def codetable_in_standard_cover_order(codetable):
     # we have to be careful with singleton codes (strings) ... if they have more than one char, they were
