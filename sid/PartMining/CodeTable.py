@@ -5,10 +5,14 @@
 # Comments: Factorized methods from the original notebooks related to the
 #   management of code tables
 #   not OO, should be refactorized
+## BEWARE: apply does not add concurrency of the processes, it centralizes the
+## calculations, use starmap instead, using tuples as elements of the iterator
+##  to be mapped as arguments.
 ## TODO: the codes are lists of strings, thus the lexicographical order might be
 ##      altered regarding the actual int order. The calculations are not affected
 ##      as we work with sets and intersections, but it could be speeded up by using
 ##      ordered lists and use early fail exit
+
 # Modifications:
 #   Oct 2021: Added a parallelized version of calculate support and usage
 ##      TODO: Instead of using a loop to gather all the information after the calculation,
@@ -139,8 +143,10 @@ def calculate_codetable_support(database, codetable, parallel=False):
         limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
-        results = [pool.apply(calculate_transaction_support, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
-                    for i in range(NUMBER_OF_PROCESSORS)]
+        # results = [pool.apply(calculate_transaction_support, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
+        #             for i in range(NUMBER_OF_PROCESSORS)]
+        # # I've got to use
+        results = pool.starmap(calculate_transaction_support, [(dict(list(database.items())[limits[i]:limits[i+1]]), codetable)  for i in range(NUMBER_OF_PROCESSORS)])
         logging.debug('reducing the results ... ')
         for result_set in results:
             for label in result_set:
@@ -199,8 +205,11 @@ def calculate_codetable_usage(database, codetable, parallel=False):
         limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
-        results = [pool.apply(calculate_transaction_usage, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
-                    for i in range(NUMBER_OF_PROCESSORS)]
+        # results = [pool.apply(calculate_transaction_usage, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
+        #             for i in range(NUMBER_OF_PROCESSORS)]
+        results = pool.starmap(calculate_transaction_usage,
+                              [(dict(list(database.items())[limits[i]:limits[i + 1]]), codetable) for i in range(NUMBER_OF_PROCESSORS)])
+
         logging.debug('reducing the results ... ')
         # we apply the data to the codetable
         for result_set in results:
