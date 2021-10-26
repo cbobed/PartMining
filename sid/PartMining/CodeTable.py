@@ -35,7 +35,7 @@ import psutil as ps
 
 import logging
 
-NUMBER_OF_PROCESSORS=ps.cpu_count(logical=True)
+NUMBER_OF_PROCESSORS=ps.cpu_count(logical=False)
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -59,15 +59,49 @@ def read_codetable(filename, load_all):
                     label+=1
     return codes
 
-def build_SCT(database):
-    sct_codetable = {}
+def calculate_sct_support_usage (database):
+    result = {}
     for trans in database:
         for singleton in [int(item) for item in database[trans]]:
+            if singleton not in result:
+                result[singleton] = {'code': str(singleton), 'support': 0, 'usage': 0}
+            result[singleton]['usage'] = result[singleton]['usage'] + 1
+            result[singleton]['support'] = result[singleton]['support'] + 1
+    return result
 
-            if singleton not in sct_codetable:
-                sct_codetable[singleton] = {'code': str(singleton), 'support': 0, 'usage': 0}
-            sct_codetable[singleton]['usage'] = sct_codetable[singleton]['usage'] + 1
-            sct_codetable[singleton]['support'] = sct_codetable[singleton]['support'] + 1
+def build_SCT(database, parallel=False, num_processors=NUMBER_OF_PROCESSORS):
+    sct_codetable = {}
+    if (not parallel):
+        for trans in database:
+            for singleton in [int(item) for item in database[trans]]:
+
+                if singleton not in sct_codetable:
+                    sct_codetable[singleton] = {'code': str(singleton), 'support': 0, 'usage': 0}
+                sct_codetable[singleton]['usage'] = sct_codetable[singleton]['usage'] + 1
+                sct_codetable[singleton]['support'] = sct_codetable[singleton]['support'] + 1
+    else:
+        pool = mp.Pool(num_processors)
+        chunk_length = len(database) // num_processors
+        limits = [i * chunk_length for i in range(num_processors)]
+        limits.append(len(database))
+        print(f'chunks ... {limits}')
+        results = pool.map(calculate_sct_support_usage,
+                               [dict(list(database.items())[limits[i]:limits[i + 1]]) for i in
+                                range(num_processors)])
+        logging.debug('reducing the results ... ')
+        ## each result is a dict
+        for result_dict in results:
+            for label in result_dict:
+                if label not in sct_codetable:
+                    sct_codetable[label]={'code': result_dict[label]['code'],
+                                          'support': result_dict[label]['support'],
+                                          'usage': result_dict[label]['usage']}
+                else:
+                    sct_codetable[label]['support'] += result_dict[label]['support']
+                    sct_codetable[label]['usage'] += result_dict[label]['usage']
+
+        pool.close()
+    logging.debug('<-- leaving support')
     return sct_codetable
 
 def convert_int_codetable (codetable, analysis_table):
@@ -117,7 +151,7 @@ def calculate_transaction_support (database, codetable):
         # we need to reduce the data afterwards
     return result
 
-def calculate_codetable_support(database, codetable, parallel=False):
+def calculate_codetable_support(database, codetable, parallel=False, num_processors=NUMBER_OF_PROCESSORS):
     logging.debug('--> entering support')
     logging.debug('cleaning the codetable ... ')
     for label in codetable:
@@ -138,15 +172,15 @@ def calculate_codetable_support(database, codetable, parallel=False):
                     codetable[label]['support'] += 1
     else:
         # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
-        pool = mp.Pool(NUMBER_OF_PROCESSORS)
-        chunk_length = len(database) // NUMBER_OF_PROCESSORS
-        limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
+        pool = mp.Pool(num_processors)
+        chunk_length = len(database) // num_processors
+        limits = [i * chunk_length for i in range(num_processors)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
         # results = [pool.apply(calculate_transaction_support, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
         #             for i in range(NUMBER_OF_PROCESSORS)]
         # # I've got to use
-        results = pool.starmap(calculate_transaction_support, [(dict(list(database.items())[limits[i]:limits[i+1]]), codetable)  for i in range(NUMBER_OF_PROCESSORS)])
+        results = pool.starmap(calculate_transaction_support, [(dict(list(database.items())[limits[i]:limits[i+1]]), codetable)  for i in range(num_processors)])
         logging.debug('reducing the results ... ')
         for result_set in results:
             for label in result_set:
@@ -176,7 +210,7 @@ def calculate_transaction_usage (database, codetable):
             print('This codetable is not covering properly the database ... is the SCT added?')
     return result
 
-def calculate_codetable_usage(database, codetable, parallel=False):
+def calculate_codetable_usage(database, codetable, parallel=False, num_processors=NUMBER_OF_PROCESSORS):
     logging.debug('--> entering usage')
     logging.debug('cleaning the codetable ... ')
     for label in codetable:
@@ -200,15 +234,15 @@ def calculate_codetable_usage(database, codetable, parallel=False):
                 print('This codetable is not covering properly the database ... is the SCT added?')
     else:
         # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
-        pool = mp.Pool(NUMBER_OF_PROCESSORS)
-        chunk_length = len(database) // NUMBER_OF_PROCESSORS
-        limits = [i * chunk_length for i in range(NUMBER_OF_PROCESSORS)]
+        pool = mp.Pool(num_processors)
+        chunk_length = len(database) // num_processors
+        limits = [i * chunk_length for i in range(num_processors)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
         # results = [pool.apply(calculate_transaction_usage, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
         #             for i in range(NUMBER_OF_PROCESSORS)]
         results = pool.starmap(calculate_transaction_usage,
-                              [(dict(list(database.items())[limits[i]:limits[i + 1]]), codetable) for i in range(NUMBER_OF_PROCESSORS)])
+                              [(dict(list(database.items())[limits[i]:limits[i + 1]]), codetable) for i in range(num_processors)])
 
         logging.debug('reducing the results ... ')
         # we apply the data to the codetable
