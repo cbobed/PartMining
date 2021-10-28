@@ -28,6 +28,10 @@ import argparse
 import multiprocessing as mp
 import TransactionDatabase as tdb
 import time
+import glob
+import os
+
+from collections import Counter
 
 import multiprocessing as mp
 
@@ -35,7 +39,7 @@ import psutil as ps
 
 import logging
 
-NUMBER_OF_PROCESSORS=ps.cpu_count(logical=False)
+NUMBER_OF_PROCESSORS=ps.cpu_count(logical=True)
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -151,7 +155,21 @@ def calculate_transaction_support (database, codetable):
         # we need to reduce the data afterwards
     return result
 
-def calculate_codetable_support(database, codetable, parallel=False, num_processors=NUMBER_OF_PROCESSORS):
+def calculate_transaction_support_from_file (filename, codetable):
+    result = []
+    with open(filename, mode='rt', encoding='UTF-8') as filename:
+        for line in filename:
+            aux = line.rstrip('\n')
+            words = filter(None, aux.split(' '))
+            item_set = set([int(item) for item in list(words)])
+            for label in codetable:
+                if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
+                    result.append(label)
+        # we return all the labels of the codes supported by these transactions
+        # we need to reduce the data afterwards
+    return result
+
+def calculate_codetable_support(database, codetable, parallel=False, use_file_splitting=False, reuse_files=False, num_processors=NUMBER_OF_PROCESSORS):
     logging.debug('--> entering support')
     logging.debug('cleaning the codetable ... ')
     for label in codetable:
@@ -177,10 +195,26 @@ def calculate_codetable_support(database, codetable, parallel=False, num_process
         limits = [i * chunk_length for i in range(num_processors)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
-        # results = [pool.apply(calculate_transaction_support, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
-        #             for i in range(NUMBER_OF_PROCESSORS)]
-        # # I've got to use
-        results = pool.starmap(calculate_transaction_support, [(dict(list(database.items())[limits[i]:limits[i+1]]), codetable)  for i in range(num_processors)])
+
+        if (not use_file_splitting):
+            results = pool.starmap(calculate_transaction_support, [(dict(list(database.items())[limits[i]:limits[i+1]]), codetable)  for i in range(num_processors)])
+        else:
+            if (not reuse_files):
+                listing = glob.glob('tmp_split*')
+                # we clean the previous existing files
+                for filename in listing:
+                    if os.path.exists(filename):
+                        os.remove(filename)
+                for i in range(num_processors):
+                    with open('tmp_split_'+str(i)+'.dat', 'w', encoding='UTF-8') as output:
+                        for trans_tuple in list(database.items())[limits[i]:limits[i + 1]]:
+                            for item in trans_tuple[1]:
+                                output.write(item+' ')
+                            output.write('\n')
+
+
+            results = pool.starmap(calculate_transaction_support_from_file, [('tmp_split_'+str(i)+'.dat', codetable) for i in range(num_processors)])
+
         logging.debug('reducing the results ... ')
         for result_set in results:
             for label in result_set:
@@ -210,7 +244,25 @@ def calculate_transaction_usage (database, codetable):
             print('This codetable is not covering properly the database ... is the SCT added?')
     return result
 
-def calculate_codetable_usage(database, codetable, parallel=False, num_processors=NUMBER_OF_PROCESSORS):
+
+def calculate_transaction_usage_from_file (filename, codetable):
+    result = []
+    with open(filename, mode='rt', encoding='UTF-8') as filename:
+        for line in filename:
+            aux = line.rstrip('\n')
+            words = filter(None, aux.split(' '))
+            remaining_item_set = set([int(item) for item in list(words)])
+            current_code = 0
+            while len(remaining_item_set) != 0 and current_code < len(codetable):
+                if codetable[current_code]['code_set'].issubset(remaining_item_set):
+                    result.append(current_code)
+                    remaining_item_set.difference_update(codetable[current_code]['code_set'])
+                current_code += 1
+            if len(remaining_item_set) != 0:
+                print('This codetable is not covering properly the database ... is the SCT added?')
+    return result
+
+def calculate_codetable_usage(database, codetable, parallel=False, use_file_splitting=False, reuse_files=False, num_processors=NUMBER_OF_PROCESSORS):
     logging.debug('--> entering usage')
     logging.debug('cleaning the codetable ... ')
     for label in codetable:
@@ -239,10 +291,27 @@ def calculate_codetable_usage(database, codetable, parallel=False, num_processor
         limits = [i * chunk_length for i in range(num_processors)]
         limits.append(len(database))
         print(f'chunks ... {limits}')
-        # results = [pool.apply(calculate_transaction_usage, args=(dict(list(database.items())[limits[i]:limits[i+1]]), codetable))
-        #             for i in range(NUMBER_OF_PROCESSORS)]
-        results = pool.starmap(calculate_transaction_usage,
-                              [(dict(list(database.items())[limits[i]:limits[i + 1]]), codetable) for i in range(num_processors)])
+
+        if (not use_file_splitting):
+            results = pool.starmap(calculate_transaction_usage,
+                                   [(dict(list(database.items())[limits[i]:limits[i + 1]]), codetable) for i in
+                                    range(num_processors)])
+        else:
+            if (not reuse_files):
+                listing = glob.glob('tmp_split*')
+                # we clean the previous existing files
+                for filename in listing:
+                    if os.path.exists(filename):
+                        os.remove(filename)
+                for i in range(num_processors):
+                    with open('tmp_split_' + str(i) + '.dat', 'w', encoding='UTF-8') as output:
+                        for trans_tuple in list(database.items())[limits[i]:limits[i + 1]]:
+                            for item in trans_tuple[1]:
+                                output.write(item + ' ')
+                            output.write('\n')
+            results = pool.starmap(calculate_transaction_usage_from_file,
+                                   [('tmp_split_' + str(i) + '.dat', codetable) for i in range(num_processors)])
+
 
         logging.debug('reducing the results ... ')
         # we apply the data to the codetable
