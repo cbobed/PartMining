@@ -145,26 +145,31 @@ def convert_int_codetable (codetable, analysis_table):
 #     return codes
 
 def calculate_transaction_support (database, codetable):
-    result = []
+    result = {}
     for trans in database:
         item_set = set([int(item) for item in database[trans]])
         for label in codetable:
             if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
-                result.append(label)
+                if label not in result:
+                    result[label] = 0
+                result[label] += 1
         # we return all the labels of the codes supported by these transactions
         # we need to reduce the data afterwards
     return result
 
 def calculate_transaction_support_from_file (filename, codetable):
-    result = []
-    with open(filename, mode='rt', encoding='UTF-8') as filename:
-        for line in filename:
+    result = {}
+    with open(filename, mode='rt', encoding='UTF-8') as file:
+        lines = file.readlines()
+        for line in lines:
             aux = line.rstrip('\n')
             words = filter(None, aux.split(' '))
             item_set = set([int(item) for item in list(words)])
             for label in codetable:
                 if len(codetable[label]['code_set'].intersection(item_set)) == len(codetable[label]['code_set']):
-                    result.append(label)
+                    if label not in result:
+                        result[label] = 0
+                    result[label] += 1
         # we return all the labels of the codes supported by these transactions
         # we need to reduce the data afterwards
     return result
@@ -218,7 +223,7 @@ def calculate_codetable_support(database, codetable, parallel=False, use_file_sp
         logging.debug('reducing the results ... ')
         for result_set in results:
             for label in result_set:
-                codetable[label]['support'] += 1
+                codetable[label]['support'] += result_set[label]
 
         pool.close()
     logging.debug('<-- leaving support')
@@ -226,7 +231,7 @@ def calculate_codetable_support(database, codetable, parallel=False, use_file_sp
 ## Note that I cannot do it until I have the codetable
 
 def calculate_transaction_usage (database, codetable):
-    result = []
+    result = {}
     for trans in database:
         remaining_item_set = set([int(item) for item in database[trans]])
         current_code = 0
@@ -237,7 +242,9 @@ def calculate_transaction_usage (database, codetable):
             #     remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
 
             if codetable[current_code]['code_set'].issubset(remaining_item_set):
-                result.append(current_code)
+                if current_code not in result:
+                    result[current_code] = 0
+                result[current_code] += 1
                 remaining_item_set.difference_update(codetable[current_code]['code_set'])
             current_code += 1
         if len(remaining_item_set) != 0:
@@ -246,16 +253,19 @@ def calculate_transaction_usage (database, codetable):
 
 
 def calculate_transaction_usage_from_file (filename, codetable):
-    result = []
-    with open(filename, mode='rt', encoding='UTF-8') as filename:
-        for line in filename:
+    result = {}
+    with open(filename, mode='rt', encoding='UTF-8') as file:
+        lines = file.readlines()
+        for line in lines:
             aux = line.rstrip('\n')
             words = filter(None, aux.split(' '))
             remaining_item_set = set([int(item) for item in list(words)])
             current_code = 0
             while len(remaining_item_set) != 0 and current_code < len(codetable):
                 if codetable[current_code]['code_set'].issubset(remaining_item_set):
-                    result.append(current_code)
+                    if current_code not in result:
+                        result[current_code] = 0
+                    result[current_code] += 1
                     remaining_item_set.difference_update(codetable[current_code]['code_set'])
                 current_code += 1
             if len(remaining_item_set) != 0:
@@ -317,7 +327,7 @@ def calculate_codetable_usage(database, codetable, parallel=False, use_file_spli
         # we apply the data to the codetable
         for result_set in results:
             for label in result_set:
-                codetable[label]['usage'] +=1
+                codetable[label]['usage'] += result_set[label]
 
         pool.close()
     logging.debug('<--leaving usage ')
