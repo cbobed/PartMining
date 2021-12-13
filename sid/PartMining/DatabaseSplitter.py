@@ -407,16 +407,16 @@ if __name__ == "__main__":
             aux_db_name = args.database_file[:-3]
         else:
             aux_db_name = args.database_file[:-4]
-        split_database_items(database_transactions, aux_db_name+'_'+args.granularity+'_'+str(args.itemTrans)+'_'
+        split_database_items(database_transactions, aux_db_name+'_'+args.vect_type+'_'+args.granularity+'_'+str(args.itemTrans)+'_'
                              +args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                              trans_cluster, args.itemTrans)
     elif args.granularity == 'transaction':
         if args.database_file.endswith('.db'):
             ## we need to translate back the database if it's in Vreeken's format
             translation_table = tdb.read_analysis_table(args.database_file+'.analysis.txt')
-            split_database_transactions_translating(args.database_file[:-3]+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+            split_database_transactions_translating(args.database_file[:-3]+'_'+args.vect_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                                                     trans_cluster,
                                                     translation_table)
         else:
-            split_database_transactions(args.database_file[:-4]+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+            split_database_transactions(args.database_file[:-4]+'_'+args.vect_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                                                     trans_cluster)
