@@ -13,9 +13,11 @@
 #   our purposes)
 # * Jul 2021: some problems with fuzzy k-means implementations and hdbscan restrict
 #       such options to the notebook
+# * Dec 2021: added doc2vec method to cluster the transactions
 ##############################################################################
 
 from gensim.models import Word2Vec
+from gensim.models import Doc2Vec
 import numpy as np
 from sklearn import preprocessing
 import TransactionDatabase as tdb
@@ -27,6 +29,7 @@ import hdbscan
 import argparse
 import random
 import ntpath
+import logging
 
 ## I was going to use scikit directly, but I saw this post
 ## kudos for him https://towardsdatascience.com/k-means-8x-faster-27x-lower-error-than-scikit-learns-in-25-lines-eaedc7a3a0c8
@@ -42,6 +45,14 @@ def calculate_centroids (model, labelled_transactions):
 #     return centroids
     # more pythonic way
     return { label: np.mean([model.wv[it] for it in  labelled_transactions[label]], axis=0) for label in labelled_transactions}
+
+def calculate_transaction_representations (model, labelled_transactions):
+    ## the id used in the doc2vec tagged documents is the same one as the one used when loading the transaactions
+    ## in labelled transactions -> ordered line by line (( a small check is added if debug is true though just in case with the inference ))
+    logging.debug(f'first vector in the model {model.dv[0]}')
+    logging.debug(f'first inferred vector from the model {model.infer_vector(labelled_transactions[0])}')
+    logging.debug(np.allclose(model.dv[0], model.infer_vector(labelled_transactions[0])))
+    return {label: model.dv[label] for label in labelled_transactions}
 
 def calculate_normalized_centroids(model, labelled_transactions):
     dim = model.wv[labelled_transactions[0][0]].shape[0]
@@ -288,6 +299,7 @@ def split_database_transactions_translating(database_name, clusters, table):
                 file.write('\n')
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     # params: -database filename of the extension
     #           -clustering k_means | fuzzy_k_means | hdbscan
     #           -granularity transaction | item
@@ -303,6 +315,10 @@ if __name__ == "__main__":
     my_parser.add_argument('-clustering', action='store', required=True,
                            choices=['k_means', 'hdbscan', 'random'],
                            help="clustering algorithm, default: k_means", default='k_means')
+    my_parser.add_argument('-vector_type', action='store', required=False,
+                           choices=['w2v', 'd2v'],
+                           help="embedding method, defines the embedding granularity, item/transaction, default: w2v",
+                           default='w2v')
     my_parser.add_argument('-granularity', action='store', required=True,
                            choices=['transaction', 'item'],
                            help="clustering level, default: transaction", default='transaction')
@@ -316,9 +332,13 @@ if __name__ == "__main__":
     args=my_parser.parse_args()
 
     start_time = time.time()
-    model = Word2Vec.load(args.model_file)
-    vector_dimension = model.wv.vector_size
-    labelled_vects = {int(x): model.wv.get_vector(x) for x in model.wv.key_to_index}
+    if args.vector_type == 'w2v':
+        model = Word2Vec.load(args.model_file)
+        vector_dimension = model.wv.vector_size
+        labelled_vects = {int(x): model.wv.get_vector(x) for x in model.wv.key_to_index}
+    elif args.vector_type == 'd2v':
+        model = Doc2Vec.load(args.model_file)
+        vector_dimension = model.dv.vector_size
     print(f'Model loaded in {time.time() - start_time} s.')
 
     start_time = time.time()
@@ -328,17 +348,28 @@ if __name__ == "__main__":
         database_transactions = tdb.read_database_dat(args.database_file)
     print(f'Database loaded in {time.time() - start_time} s.')
 
-    start_time = time.time()
-    centroids = calculate_centroids(model, database_transactions)
-    print(f'Centroids calculated in {time.time() - start_time} s.')
+    if args.vector_type == 'w2v':
+        start_time = time.time()
+        ## we need to calculate the representation of the transactions from their items' embeddings
+        centroids = calculate_centroids(model, database_transactions)
+        print(f'Centroids calculated in {time.time() - start_time} s.')
 
-    start_time = time.time()
-    weighted_centroids = calculate_weighted_centroids(model, database_transactions)
-    print(f'weighted centroids calculated in {time.time() - start_time} s.')
+        start_time = time.time()
+        weighted_centroids = calculate_weighted_centroids(model, database_transactions)
+        print(f'weighted centroids calculated in {time.time() - start_time} s.')
 
-    start_time = time.time()
-    normalized_centroids = calculate_normalized_centroids(model, database_transactions)
-    print(f'normalized centroids calculated in {time.time() - start_time} s.')
+        start_time = time.time()
+        normalized_centroids = calculate_normalized_centroids(model, database_transactions)
+        print(f'normalized centroids calculated in {time.time() - start_time} s.')
+    elif args.vector_type == 'd2v':
+        ## for retrocompatibility's sake, I use the same variable names for the transaction
+        ## representation using doc2vec as well
+        start_time = time.time()
+        centroids = calculate_transaction_representations(model, database_transactions)
+        print(f'Transaction representations calculated in {time.time() - start_time} s.')
+        ## it makes no sense to have either weighted or normalized vectors in this case
+        weighted_centroids = None
+        normalized_centroids = None
 
     ## to avoid losing the linking information about the vector and its centroid,
     ## we force the array vects to be sorted regarding the labels of the dict

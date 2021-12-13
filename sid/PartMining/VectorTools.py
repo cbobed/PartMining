@@ -5,6 +5,7 @@
 # Comments: Code to obtain a word embedding model out from a transactional database
 # in Vreeken et al. database format
 # Modifications:
+#   Dec 2021: added doc2vec model to get different embeddings for the transactions
 ###############################################################################
 
 import gensim, logging, os, sys, gzip
@@ -29,6 +30,22 @@ class MySentencesDB(object):
                     aux = line.split(':')[1].rstrip('\n')
                     words = filter(None,aux.split(' '))
                     yield list(words)
+        except Exception:
+            print ('Failed reading file: ')
+            print (self.filename)
+
+class MyDocumentsDB(object):
+    def __init__(self, filename):
+        self.filename = filename
+    def __iter__(self):
+        try:
+            i = -1
+            for line in open(self.filename, mode='rt', encoding='UTF-8'):
+                i += 1
+                if (line.split(':')[0].isnumeric()):
+                    aux = line.split(':')[1].rstrip('\n')
+                    words = filter(None,aux.split(' '))
+                    yield gensim.models.doc2vec.TaggedDocument(list(words), [i])
         except Exception:
             print ('Failed reading file: ')
             print (self.filename)
@@ -78,6 +95,22 @@ class MySentencesDat(object):
             print ('Failed reading file: ')
             print (self.filename)
 
+class MyDocumentsDat(object):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def __iter__(self):
+        try:
+            i=-1
+            for line in open(self.filename, mode='rt', encoding='UTF-8'):
+                i+=1
+                aux = line.rstrip('\n')
+                words = filter(None,aux.split(' '))
+                yield gensim.Doc2Vec.TaggedDocument(list(words), [i])
+        except Exception:
+            print ('Failed reading file: ')
+            print (self.filename)
+
 if __name__ == "__main__":
     # This is the entry point to get the vectors for a database file or for
     # all the datasets that are within a given directory
@@ -94,7 +127,16 @@ if __name__ == "__main__":
 
     my_parser.add_argument('-win', action='store', type=int, required=False,
                            help="windows size for the w2vec alg, default: 5", default=5)
-    my_parser.add_argument('-alg', action='store', choices=['sg', 'cbow'],
+    ## From the doc2vec documentation:
+    # PV-DM is analogous to Word2Vec CBOW. The doc-vectors are obtained by training a neural
+    # network on the synthetic task of predicting a center word based an average of both context
+    # word-vectors and the full document’s doc-vector.
+    #
+    # PV-DBOW is analogous to Word2Vec SG. The doc-vectors are obtained by training a neural
+    # network on the synthetic task of predicting a target word just from the full document’s doc-vector.
+    # (It is also common to combine this with skip-gram testing, using both the doc-vector and nearby word-vectors
+    # to predict a single target word, but only one at a time.)
+    my_parser.add_argument('-alg', action='store', choices=['sg', 'cbow', 'pv-dbow', 'pv-dm'],
                            help=" use skip_gram or cbow for word2vec, default: sg",
                            default='sg')
     my_parser.add_argument('-dim', action='store', type=int, required=False,
@@ -126,17 +168,28 @@ if __name__ == "__main__":
 
     for fname in list_files:
         if (fname.endswith('.db')):
-            if (args.ord):
-                sentences = MyOrderedSentencesDB(fname)
-            else:
-                sentences = MySentencesDB(fname)
+            if (args.alg == 'sg' or args.alg == 'cbow'):
+                if (args.ord):
+                    sentences = MyOrderedSentencesDB(fname)
+                else:
+                    sentences = MySentencesDB(fname)
+            elif (args.alg == 'pv-dbow' or args.alg == 'pv-dm'):
+                sentences = MyDocumentsDB(fname)
         elif (fname.endswith('.dat')):
-            sentences = MySentencesDat(fname)
+            if (args.alg == 'sg' or args.alg == 'cbow'):
+                sentences = MySentencesDat(fname)
+            elif (args.alg == 'pv-dbow' or args.alg == 'pv-dm'):
+                sentences = MyDocumentsDat(fname)
 
         out_name = fname + '_'+str(args.dim)+'_'+str(args.win)+'_'+str(args.epochs)+'_'+args.alg+'.vect'
         # we force min_count to 1 in order not to miss any item
-        model = gensim.models.Word2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
+
+        if (args.alg == 'sg' or args.alg == 'cbow'):
+            model = gensim.models.Word2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
                                     sg=(1 if args.alg == 'sg' else 0), negative=15, epochs=args.epochs, min_count=1)
+        elif (args.alg == 'pv-dbow' or args.alg == 'pv-dm'):
+            model = gensim.models.doc2vec.Doc2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
+                                                  dm=(1 if args.alg=='pv-dm' else 0), negative=15, epochs=args.epochs, min_count=1)
         model.build_vocab(sentences, progress_per=10000)
         start_time = time.time()
         model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs, report_delay=1)
