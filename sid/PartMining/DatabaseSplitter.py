@@ -420,5 +420,4 @@ if __name__ == "__main__":
                                                     trans_cluster,
                                                     translation_table)
         else:
-            split_database_transactions(args.database_file[:-4]+'_'+args.vector_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
-                                                    trans_cluster)
+            split_database_transactions(args.database_file[:-4]+'_'+args.vector_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',trans_cluster)
