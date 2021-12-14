@@ -30,9 +30,10 @@ class MySentencesDB(object):
                     aux = line.split(':')[1].rstrip('\n')
                     words = filter(None,aux.split(' '))
                     yield list(words)
-        except Exception:
+        except Exception as e:
             print ('Failed reading file: ')
             print (self.filename)
+            print(e)
 
 class MyDocumentsDB(object):
     def __init__(self, filename):
@@ -46,9 +47,10 @@ class MyDocumentsDB(object):
                     aux = line.split(':')[1].rstrip('\n')
                     words = filter(None,aux.split(' '))
                     yield gensim.models.doc2vec.TaggedDocument(list(words), [i])
-        except Exception:
+        except Exception as e:
             print ('Failed reading file: ')
             print (self.filename)
+            print(e)
 
 def custom_order_db (item_list):
     atEnd = False;
@@ -77,9 +79,10 @@ class MyOrderedSentencesDB(object):
                     ints = [int(it) for it in words]
                     words = [str(it) for it in custom_order_db(ints)]
                     yield list(words)
-        except Exception:
+        except Exception as e:
             print ('Failed reading file: ')
             print (self.filename)
+            print(e)
 
 class MySentencesDat(object):
     def __init__(self, filename):
@@ -91,9 +94,10 @@ class MySentencesDat(object):
                 aux = line.rstrip('\n')
                 words = filter(None,aux.split(' '))
                 yield list(words)
-        except Exception:
+        except Exception as e:
             print ('Failed reading file: ')
             print (self.filename)
+            print(e)
 
 class MyDocumentsDat(object):
     def __init__(self, filename):
@@ -106,10 +110,11 @@ class MyDocumentsDat(object):
                 i+=1
                 aux = line.rstrip('\n')
                 words = filter(None,aux.split(' '))
-                yield gensim.Doc2Vec.TaggedDocument(list(words), [i])
-        except Exception:
+                yield gensim.models.doc2vec.TaggedDocument(list(words), [i])
+        except Exception as e:
             print ('Failed reading file: ')
             print (self.filename)
+            print(e)
 
 if __name__ == "__main__":
     # This is the entry point to get the vectors for a database file or for
@@ -187,10 +192,13 @@ if __name__ == "__main__":
         if (args.alg == 'sg' or args.alg == 'cbow'):
             model = gensim.models.Word2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
                                     sg=(1 if args.alg == 'sg' else 0), negative=15, epochs=args.epochs, min_count=1)
+            model.build_vocab(sentences, progress_per=10000)
         elif (args.alg == 'pv-dbow' or args.alg == 'pv-dm'):
             model = gensim.models.doc2vec.Doc2Vec(vector_size=args.dim, workers=args.workers, window=args.win,
                                                   dm=(1 if args.alg=='pv-dm' else 0), negative=15, epochs=args.epochs, min_count=1)
-        model.build_vocab(sentences, progress_per=10000)
+            print(f'Llego a donde debería ...')
+            model.build_vocab(sentences, progress_per=10000)
+            print(f'y parece que sigo ...')
         start_time = time.time()
         model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs, report_delay=1)
         end_time = time.time()
