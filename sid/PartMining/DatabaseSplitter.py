@@ -49,10 +49,12 @@ def calculate_centroids (model, labelled_transactions):
 def calculate_transaction_representations (model, labelled_transactions):
     ## the id used in the doc2vec tagged documents is the same one as the one used when loading the transaactions
     ## in labelled transactions -> ordered line by line (( a small check is added if debug is true though just in case with the inference ))
+    ## as they aren't equal, I get the inferred vector of the transactions: ideally it should be one of the vectors
+    ## in the document space
     logging.debug(f'first vector in the model {model.dv[0]}')
     logging.debug(f'first inferred vector from the model {model.infer_vector(labelled_transactions[0])}')
     logging.debug(np.allclose(model.dv[0], model.infer_vector(labelled_transactions[0])))
-    return {label: model.dv[label] for label in labelled_transactions}
+    return {label: model.infer_vector(labelled_transactions[label]) for label in labelled_transactions}
 
 def calculate_normalized_centroids(model, labelled_transactions):
     dim = model.wv[labelled_transactions[0][0]].shape[0]
@@ -407,16 +409,16 @@ if __name__ == "__main__":
             aux_db_name = args.database_file[:-3]
         else:
             aux_db_name = args.database_file[:-4]
-        split_database_items(database_transactions, aux_db_name+'_'+args.vect_type+'_'+args.granularity+'_'+str(args.itemTrans)+'_'
+        split_database_items(database_transactions, aux_db_name+'_'+args.vector_type+'_'+args.granularity+'_'+str(args.itemTrans)+'_'
                              +args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                              trans_cluster, args.itemTrans)
     elif args.granularity == 'transaction':
         if args.database_file.endswith('.db'):
             ## we need to translate back the database if it's in Vreeken's format
             translation_table = tdb.read_analysis_table(args.database_file+'.analysis.txt')
-            split_database_transactions_translating(args.database_file[:-3]+'_'+args.vect_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+            split_database_transactions_translating(args.database_file[:-3]+'_'+args.vector_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                                                     trans_cluster,
                                                     translation_table)
         else:
-            split_database_transactions(args.database_file[:-4]+'_'+args.vect_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
+            split_database_transactions(args.database_file[:-4]+'_'+args.vector_type+'_'+args.granularity+'_'+args.clustering+'_'+str(vector_dimension)+'d_k'+str(args.num_clusters)+'_'+str(args.normalize)+'Norm',
                                                     trans_cluster)
