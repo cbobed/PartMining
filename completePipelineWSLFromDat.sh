@@ -25,15 +25,16 @@ OUTPUT_SPLITTED_PATH="$PYTHON_PROJECT_PATH"/output_databases
 #configuration of the first script to obtain the vectors 
 DIMENSION=200
 WIN_SIZE=5
-EPOCHS=10
+EPOCHS=50
 WORKERS=4
-
+EMBEDDING_METHOD=pv-dbow
 
 # configuration of the second script to split the database_name
 # k_means , random
 CLUSTERING=$2
 GRANULARITY=transaction
 NUM_CLUSTERS=$3
+VECT_TYPE=d2v
 # set NORMALIZE to -normalize if we want to normalize the vectors
 NORMALIZE=
 PRUNING_THRESHOLD=0
@@ -57,20 +58,20 @@ cd $PYTHON_PROJECT_PATH
 
 if [[ $CLUSTERING != "random" ]]; then 
 	echo "calculate vectors ..." > "$TIME_FILE"
-	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
+	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS $EMBEDDING_METHOD >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
 fi
 
-# we should now have database_name+'_DIMENSION_WIN_EPOCHS_sg.vect' as name of the model
-MODEL_FILE="$1"_"$DIMENSION"_"$WIN_SIZE"_"$EPOCHS"_sg.vect
+# we should now have database_name+'_DIMENSION_WIN_EPOCHS_EMBEDDING_METHOD.vect' as name of the model
+MODEL_FILE="$1"_"$DIMENSION"_"$WIN_SIZE"_"$EPOCHS"_"$EMBEDDING_METHOD".vect
 echo $MODEL_FILE
 
 echo "split database ... " >> "$TIME_FILE"
-{ time ./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
+{ time ./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE $VECT_TYPE >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 # depending on the granularity we can have different names
 
 #Transactions: we should have in output_databases => 
-#  dbBasename_GRANULARITY_CLUSTERING_DIMENSIONd_kNUM_CLUSTERS_[True|False]Norm * 
+#  dbBasename_VECT_TYPE_GRANULARITY_CLUSTERING_DIMENSIONd_kNUM_CLUSTERS_[True|False]Norm * 
 
 DB_BASENAME=${1/.dat/}
 
@@ -90,7 +91,7 @@ else
 	fi
 fi
 
-SPLITTED_BASENAME="$DB_BASENAME"_"$GRANULARITY"_"$CLUSTERING"_"$DIMENSION"d_k"$NUM_CLUSTERS"_"$NORM_NAME"Norm_"$TRANS_NAME"
+SPLITTED_BASENAME="$DB_BASENAME"_"$VECT_TYPE"_"$GRANULARITY"_"$CLUSTERING"_"$DIMENSION"d_k"$NUM_CLUSTERS"_"$NORM_NAME"Norm_"$TRANS_NAME"
 # afterwards  '_' + str(label) + '_k' + str(k) + '.dat' is added 
 
 cp "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"* $SLIM_PROJECT_PATH
