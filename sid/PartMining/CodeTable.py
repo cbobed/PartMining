@@ -68,10 +68,10 @@ def store_codetable_dat(codetable, filename):
     with open(filename, mode='w', encoding='UTF-8') as file:
         for code_label in codetable:
             for item in codetable[code_label]['code']:
-                file.print(item + ' ')
-            file.print('#SUP:')
-            file.print(codetable[code_label]['support'])
-            file.print('\n')
+                file.write(item + ' ')
+            file.write('#SUP:')
+            file.write(codetable[code_label]['support'])
+            file.write('\n')
 
 def calculate_sct_support_usage (database):
     result = {}
