@@ -58,7 +58,7 @@ if __name__ == "__main__":
         converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
 
     print(f'merged table size: {len(converted_merged_codetable)}')
-    ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.split_parallelization, reuse_files=False)
+    ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.parallel, reuse_files=False)
     converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
 
     ct.store_codetable_dat(converted_merged_codetable_sco, args.codetable_basename+"-KRIMPMerged.ct")
