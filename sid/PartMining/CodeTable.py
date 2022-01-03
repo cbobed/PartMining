@@ -63,6 +63,16 @@ def read_codetable(filename, load_all):
                     label+=1
     return codes
 
+## it assumes that it has been already sorted if required (calculate_cover_order)
+def store_codetable_dat(codetable, filename):
+    with open(filename, mode='w', encoding='UTF-8') as file:
+        for code_label in codetable:
+            for item in codetable[code_label]['code']:
+                file.print(item + ' ')
+            file.print('#SUP:')
+            file.print(codetable[code_label]['support'])
+            file.print('\n')
+
 def calculate_sct_support_usage (database):
     result = {}
     for trans in database:
