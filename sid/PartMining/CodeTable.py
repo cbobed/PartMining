@@ -70,7 +70,7 @@ def store_codetable_dat(codetable, filename):
             for item in codetable[code_label]['code']:
                 file.write(item + ' ')
             file.write('#SUP:')
-            file.write(codetable[code_label]['support'])
+            file.write(str(codetable[code_label]['support']))
             file.write('\n')
 
 def calculate_sct_support_usage (database):
