@@ -55,6 +55,10 @@ echo "" > "$TIME_FILE"
 # %1 is the filename of the dataset
 cd $PYTHON_PROJECT_PATH
 
+./calculateVocabSize.sh $1
+./calculateEntropy.sh $1
+
+
 if [[ $CLUSTERING != "random" ]]; then 
 	echo "calculate vectors ..." > "$TIME_FILE"
 	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
@@ -104,9 +108,18 @@ for db in "$SPLITTED_BASENAME"*.dat; do
 	# now, in LOCAL_BASENAME-output we have the codetable and the analysis file
 	cp "$LOCAL_BASENAME"-output/ct-latest.ct "$OUTPUT_SPLITTED_PATH"/"$LOCAL_BASENAME".ct
 	cp "$LOCAL_BASENAME"-output/"$LOCAL_BASENAME".db.analysis.txt "$OUTPUT_SPLITTED_PATH"
+	tar -zcf "$OUTPUT_SPLITTED_PATH"/"$LOCAL_BASENAME"-results.tar.gz "$LOCAL_BASENAME"-output
+	rm -fr "$LOCAL_BASENAME"-output
+	rm "$LOCAL_BASENAME"*
 done 
 
+echo going back to $PYTHON_PROJECT_PATH
 cd $PYTHON_PROJECT_PATH
+
+for db in "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"*.dat; do 
+	./calculateVocabSize.sh $db
+	./calculateAdjustedEntropy.sh $db $1
+done
 
 ACTUAL_NUM_CLUSTER=0
 for db in "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"*.dat; do 
