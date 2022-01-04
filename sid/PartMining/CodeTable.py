@@ -69,7 +69,7 @@ def store_codetable_dat(codetable, filename):
         for code_label in codetable:
             for item in codetable[code_label]['code']:
                 file.write(item + ' ')
-            file.write('#SUP:')
+            file.write('#SUP: ')
             file.write(str(codetable[code_label]['support']))
             file.write('\n')
 
