@@ -16,6 +16,7 @@
 ##############################################################################
 
 from gensim.models import Word2Vec
+from gensim.models import KeyedVectors
 import numpy as np
 from sklearn import preprocessing
 import TransactionDatabase as tdb
@@ -316,7 +317,8 @@ if __name__ == "__main__":
     args=my_parser.parse_args()
 
     start_time = time.time()
-    model = Word2Vec.load(args.model_file)
+    #model = Word2Vec.load(args.model_file)
+    model = KeyedVectors.load_word2vec_format(args.model_file)
     vector_dimension = model.wv.vector_size
     labelled_vects = {int(x): model.wv.get_vector(x) for x in model.wv.key_to_index}
     print(f'Model loaded in {time.time() - start_time} s.')

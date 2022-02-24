@@ -23,7 +23,7 @@ DATASETS_PATH=/home/siduser/cbobed/git/PartMining
 OUTPUT_SPLITTED_PATH="$PYTHON_PROJECT_PATH"/output_databases
 
 #configuration of the first script to obtain the vectors 
-DIMENSION=200
+DIMENSION=50
 WIN_SIZE=5
 EPOCHS=10
 WORKERS=4

@@ -1,3 +1,14 @@
 /datasets/*.ct
 /datasets/*.vect
 /datasets/*.db
+/win*
+/batch_results*
+/completeResults*
+/outputs*
+/tmp*
+/gloveResults*
+/glove_batch_results*
+/datStorage
+/dbpedia*
+/*-results
+
