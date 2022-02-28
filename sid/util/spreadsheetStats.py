@@ -40,16 +40,31 @@ class Headers:
     INVALID_BATCH = 'invalid_batch'
     EXECS = 'executions'
 
-DATASET_NAMES = ["adult.dat",
-                 "chessBig.dat",
-                 "connect.dat",
-                 "ionosphere.dat",
-                 "letrecog.dat",
-                 "pendigits.dat"
+DATASET_NAMES = [
+	"adult.dat",
+	"anneal.dat",
+	"breast.dat",
+	"chessBig.dat",
+	"chess.dat",
+	"connect.dat",
+	"heart.dat",
+	"ionosphere.dat",
+	"iris.dat",
+	"led7.dat",
+	"letrecog.dat",
+	"mushroom.dat",
+	"nursery.dat",
+	"pageblocks.dat",
+	"pendigits.dat",
+	"pima.dat",
+	"tictactoe.dat",
+	"wine.dat"
                  ]
 
 BATCH_NUMBER = 11
-BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
+#BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
+BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
+OUTPUT_FILE='200d-5-10-neg15-grouped.xls'
 
 def treat_time_cell (content):
     aux = content.split('m')
@@ -243,4 +258,4 @@ if __name__ == "__main__":
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.TIME_AVG])
                         line += 1
             col +=3
-    book.save('output_grouped.xls')
+    book.save(OUTPUT_FILE)

@@ -1,6 +1,9 @@
-NUM_CLUSTERS="4 8"
-METHODS="k_means random"
+## $1: dataset .dat filename
+## $2: dimensions
 
+NUM_CLUSTERS="4 8"
+# METHODS="k_means random"
+METHODS="k_means random"
 
 new_line(){
 	echo "" >> $1
@@ -15,7 +18,7 @@ output () {
 CSV_FILE="$1"-info.csv
 VOCAB_SIZE=`cat "$1"-vocabSize`
 FILE_ENTROPY=`head -6 "$1".entropy | tail -1 |awk '{ print $5}'`
-FILE_NORMAL_ENTROPY=`head -7 "$1".entropy | tail -1 |awk '{ print $6}'`
+FILE_NORMAL_ENTROPY=`head -7 "$1".entropy | tail -1 | awk '{ print $6}'`
 
 > $CSV_FILE
 
@@ -63,9 +66,9 @@ for N in $NUM_CLUSTERS; do
 				## We have to gather the vocabSize and the entropy of each subpartition
 				
 				if [[ $M = "random" ]]; then 
-					PART_FILENAME="${1/.dat/}"_transaction_"$M"_50d_k"$N"_FalseNorm_rand_clust_"$COUNT"_k"$N".dat.entropy
+					PART_FILENAME="${1/.dat/}"_transaction_"$M"_"$2"d_k"$N"_FalseNorm_rand_clust_"$COUNT"_k"$N".dat.entropy
 				else 
-					PART_FILENAME="${1/.dat/}"_transaction_"$M"_50d_k"$N"_FalseNorm_trans_clust_"$COUNT"_k"$N".dat.entropy
+					PART_FILENAME="${1/.dat/}"_transaction_"$M"_"$2"d_k"$N"_FalseNorm_trans_clust_"$COUNT"_k"$N".dat.entropy
 				fi
 				
 				PART_VOCAB_SIZES+=( `head -2 "$PART_FILENAME" | tail -1 | awk '{ print $3; }'` ) 
