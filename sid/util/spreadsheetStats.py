@@ -48,8 +48,8 @@ DATASET_NAMES = ["adult.dat",
                  "pendigits.dat"
                  ]
 
-BATCH_NUMBER = 1 
-BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'glove_batch_results')
+BATCH_NUMBER = 11
+BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
 
 def treat_time_cell (content):
     aux = content.split('m')
@@ -189,55 +189,55 @@ if __name__ == "__main__":
                 else:
                     current_batch +=1
 
-            if first_valid_batch <= 20:
+            if first_valid_batch < BATCH_NUMBER:
                 current_exec = gathered_data[dataset][first_valid_batch][Headers.EXECS][execID]
                 current_datasheet.write(line, col, current_exec[Headers.METHOD])
                 current_datasheet.write(line, col + 1, 'num_clusters: ' + str(current_exec[Headers.NUM_CLUSTERS]))
                 line += 1
 
-                for batch in range(1,21):
+                for batch in range(1,BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.AVERAGE_ENTROPY+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.AVERAGE_ENTROPY])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.AVERAGE_NORM_ENTROPY+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.AVERAGE_NORM_ENTROPY])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.AVERAGE_RATIO+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.AVERAGE_RATIO])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.MERGED_RATIO+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.MERGED_RATIO])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.AVERAGE_VOCAB_SIZE+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.AVERAGE_VOCAB_SIZE])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.TIME_MAX+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.TIME_MAX])
                         line += 1
                 line+=1
 
-                for batch in range(1, 21):
+                for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.TIME_AVG+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.TIME_AVG])
