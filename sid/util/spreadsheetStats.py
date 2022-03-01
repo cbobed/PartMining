@@ -61,10 +61,11 @@ DATASET_NAMES = [
 	"wine.dat"
                  ]
 
-BATCH_NUMBER = 11
+BATCH_NUMBER = 6
+NUMBER_BLOCKS = 2 
 #BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
-BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
-OUTPUT_FILE='200d-5-10-neg15-grouped.xls'
+BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg30')
+OUTPUT_FILE='200d-5-10-neg30-grouped.xls'
 
 def treat_time_cell (content):
     aux = content.split('m')
@@ -92,6 +93,7 @@ if __name__ == "__main__":
                 ## ONLY FOR CONVENIENCE - DON'T TRY THIS AT HOME
                 current_data = gathered_data[dataset][batch]
                 with open(current_csv) as csv_file:
+                    print(current_csv + " opened ...")
                     reader = csv.reader(csv_file, delimiter=';')
                     ## first block
                     current_row = reader.__next__()
@@ -104,7 +106,7 @@ if __name__ == "__main__":
                     current_row = reader.__next__()
                     current_data[Headers.EXECS] = {}
                     ## several blocks repeated differently depending on the method used
-                    for i in range(4):
+                    for i in range(NUMBER_BLOCKS):
                         current_row = reader.__next__()
                         current_data[Headers.EXECS][i] = {}
                         current_exec = current_data[Headers.EXECS][i]
@@ -128,7 +130,7 @@ if __name__ == "__main__":
                         current_exec[Headers.RATIOS] = {}
                         for i in range(current_exec[Headers.NUM_CLUSTERS]):
                             current_row = reader.__next__()
-                            # print(f' {current_row}')
+                            #print(f' {current_row}')
                             current_exec[Headers.RATIOS][i] = float(current_row[1])
 
                         current_row = reader.__next__()
@@ -157,8 +159,10 @@ if __name__ == "__main__":
                             current_row = reader.__next__()
                             current_exec[Headers.PARTITION_INFO][i][Headers.NORMAL_ENTROPY] = float(current_row[1])
                             current_row = next(reader, None)
-                        # print(current_exec)
+                        print(current_exec)
             except Exception as e:
+                print(f'Marking {batch} as INVALID')
+                print(e)
                 current_data[Headers.INVALID_BATCH] = True
 
 
@@ -187,10 +191,10 @@ if __name__ == "__main__":
         print(f'- {dataset}')
         current_datasheet = book.add_sheet(dataset)
         invalid_batches = sum([1 for i in range(1,BATCH_NUMBER) if Headers.INVALID_BATCH in gathered_data[dataset][i]])
-        current_datasheet.write(0, 0, 'batches: 20')
+        current_datasheet.write(0, 0, 'batches: '+str(BATCH_NUMBER))
         current_datasheet.write(0, 1, 'invalid ones: '+str(invalid_batches))
         col = 1
-        for execID in range(4):
+        for execID in range(NUMBER_BLOCKS):
             line = 1
             ## for the sake of readability and processing it afterwards,
             ## we gather together all the data
@@ -198,7 +202,7 @@ if __name__ == "__main__":
             ## find the first valid batch
             first_valid_batch = -1
             current_batch = 1
-            while first_valid_batch == -1 and current_batch <= 20:
+            while first_valid_batch == -1 and current_batch <= BATCH_NUMBER:
                 if Headers.INVALID_BATCH not in  gathered_data[dataset][current_batch]:
                     first_valid_batch = current_batch
                 else:
