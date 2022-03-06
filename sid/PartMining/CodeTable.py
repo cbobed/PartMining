@@ -404,6 +404,20 @@ def calculate_complete_size (codetable, standard_codetable):
     print(f'complete: {database_size+codetable_size}')
     return database_size + codetable_size
 
+def calculate_complete_size_sct (standard_codetable):
+    database_size = calculate_size_database_from_codetable(standard_codetable)
+    sum_usage_standard_codetable = 0
+    sct_codetable_size = 0.0
+    for label in standard_codetable:
+        sum_usage_standard_codetable += standard_codetable[label]['usage']
+    for label in standard_codetable:
+        if standard_codetable[label]['usage'] != 0:
+            sct_codetable_size += -math.log(standard_codetable[label]['usage'] / sum_usage_standard_codetable)
+    print(f'database_size: {database_size}')
+    print(f'codetable_size: {sct_codetable_size}')
+    print(f'complete: {database_size+sct_codetable_size}')
+    return database_size + sct_codetable_size
+
 
 
 def prune_by_usage_threshold(codetable, threshold):
@@ -413,6 +427,16 @@ def prune_by_usage_threshold(codetable, threshold):
            'code_set':codetable[i]['code_set']} for i in codetable if codetable[i]['usage'] > threshold or len(codetable[i]['code']) == 1}
 
 
+def calculate_generalized_jaccard_distance_from_scts(sct_1, sct_2):
+    num = 0.0;
+    den = 0.0;
+    for item in set(sct_1.keys()).union(sct_2.keys()):
+        ## sum (min (x_i, y_i)) / sum (max (x_i, y_i))
+        num += min (sct_1[item]['support'] if item in sct_1 else 0,
+                    sct_2[item]['support'] if item in sct_2 else 0)
+        den += max(sct_1[item]['support'] if item in sct_1 else 0,
+                   sct_2[item]['support'] if item in sct_2 else 0)
+    return 1.0 - (num/den)
 
 ## naive way of merging the codetables
 ## for convenience we work here with integers (we kept the codetables as string tokens to be able to handle the vector models)
@@ -455,6 +479,7 @@ def merge_codetables_naive(codetables):
 
     return merged
 
+
 ## we merge the tables and we apply the KRIMP pruning after the merging to
 ## avoid possible local decisions that might hid different codes
 ## PRE: codetables with the support and the usages calculated
@@ -464,11 +489,11 @@ def merge_codetables_naive(codetables):
 # code usages (sum of all the usages in the original tables for the repeated
 # codes)
 
-def merge_codetables_pruning(codetables, database):
+def merge_codetables_pruning(codetables_info, database):
     merged = {}
     non_colision_labelbase = 0
 
-    for ct in codetables:
+    for ct in [x['codetable'] for x in codetables_info]:
         for label in ct:
             current_label = str(non_colision_labelbase) + '_' + str(label)
             merged[current_label] = ct[label]
@@ -608,6 +633,87 @@ def merge_codetables_pruning(codetables, database):
     # we have all the previous information about the codes in merged and the new in new_merged, we have to
     # prune new_merged according to KRIMP prune step
     return converted_new_merged_candidate_sco
+
+## naive plus way of merging the codetables:
+## for convenience we work here with integers (we kept the codetables as string tokens to be able to handle the vector models)
+## we just get the one with the best compression ratio
+def merge_codetables_naive_plus(codetables_info, database):
+    aux_sct_codetable = build_SCT(database, False)
+    aux_sct_codetable_sco = codetable_in_standard_cover_order(aux_sct_codetable)
+    aux_sct_size = calculate_complete_size_sct(aux_sct_codetable_sco)
+
+    for ct in codetables_info:
+        ## we have to add all the singletons to the codetable beforehand
+        ## we get them from the already built aux_sct_codetable
+        for singleton in aux_sct_codetable_sco:
+            if singleton not in ct['codetable']:
+                ct['codetable'][singleton] = {'code': str(singleton), 'code_int': singleton, 'support': 0, 'usage': 0}
+
+        ct.calculate_codetable_support(database, ct['codetable'], args.parallel, args.split_parallelization,
+                                       reuse_files=False)
+        print(f'num codes: {len(ct["codetable"])}')
+        print(f'num codes with support 0: {len([x for x in ct["codetable"] if ct["codetable"][x]["support"] == 0])}')
+        for x in ct["codetable"] :
+            if ct["codetable"] [x]["support"] == 0:
+                print(f'code with support 0: {ct["codetable"] [x]}')
+        aux_codetable_sco = ct.codetable_in_standard_cover_order(ct["codetable"])
+        ct.calculate_codetable_usage(database, aux_codetable_sco, args.parallel, args.split_parallelization,
+                                     reuse_files=True)
+        aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
+        aux_ratio = aux_size / aux_sct_size
+        ct['global_ratio'] = aux_ratio
+        print(f'Partition {i} ratio: {aux_ratio}')
+
+    ratios = [ct['global_ratio'] for ct in codetables_info]
+    return ct[ratios.index(max[ratios])]['codetable']
+
+    ## we order the candidates according to their (global compression ratio * current_codetable_similarity).
+
+def merge_codetables_informed (codetables_info, database, early_finish=False):
+
+    global_sct_codetable = build_SCT(dat_database, False)
+    global_sct_codetable_sco = codetable_in_standard_cover_order(global_sct_codetable)
+    sct_compressed_size = calculate_complete_size_sct(global_sct_codetable_sco)
+
+    merge_codetables_naive_plus(codetables_info, database)
+    ratios = [ct['global_ratio'] for ct in codetables_info]
+    initial_index = ratios.index(max[ratios])
+    current_codetable = copy.deepcopy(codetables_info[initial_index]['codetable'])
+    current_sct = copy.deepcopy(codetables_info[initial_index]['sct_codetable'])
+    current_ratio = codetables_info[initial_index]['global_ratio']
+    to_process = set(range(len(codetables_info)))
+    to_process.remove(initial_index)
+    merged = set(initial_index)
+    print (f'initial ratio: {current_ratio}')
+    print (f'merged: {merged}')
+    go_on = True
+    while (len(to_process) != 0 and go_on):
+        candidate_similarity_values = [calculate_generalized_jaccard_distance_from_scts(codetables_info[idx]['sct_codetable'], current_sct) * codetables_info[idx]['global_ratio']
+                                        for idx in codetables_info if idx in to_process ]
+        next_candidate_index = candidate_similarity_values.index(max(candidate_similarity_values))
+
+        aux_codetable = merge_codetables_naive([current_codetable, codetables_info[next_candidate_index]['codetable']])
+        calculate_codetable_support(database, aux_codetable, True, True, reuse_files=False)
+        aux_codetable_sco = codetable_in_standard_cover_order(aux_codetable)
+        calculate_codetable_usage(database, aux_codetable_sco, True, True, reuse_files=True)
+
+        aux_compressed_size = calculate_complete_size(aux_codetable_sco, global_sct_codetable_sco)
+        aux_ratio = aux_compressed_size / sct_compressed_size
+        print(f'current_ratio: {current_ratio} --- candidate_ratio:{aux_ratio}')
+        to_process.remove(next_candidate_index)
+        if (aux_ratio < current_ratio):
+            print(f'merge accepted ... ')
+            merged.add(next_candidate_index)
+            current_codetable = aux_codetable_sco
+            # we update the current_sct with the usages of the previous ones
+            for item in codetables_info[next_candidate_index]['sct_codetable']:
+                if item not in current_sct:
+                    current_sct[item]={'usage':0, 'support': 0}
+                current_sct[item]['support'] += codetables_info[next_candidate_index]['sct_codetable']['support']
+        else:
+            if (early_finish):
+                go_on = False
+            print(f'merge rejected ... ')
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(allow_abbrev=False)

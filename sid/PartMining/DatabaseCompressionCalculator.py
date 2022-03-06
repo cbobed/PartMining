@@ -46,7 +46,7 @@ if __name__ == "__main__":
                                help="number of tables to be merged")
     my_parser.add_argument('-table_idx', action='store', type=int, required=False,
                                help='idx to start counting tables - hbscan sometimes starts at 0', default=0)
-    my_parser.add_argument('-merge_method', action='store', choices=['naive', 'pruning'], required=False,
+    my_parser.add_argument('-merge_method', action='store', choices=['naive', 'pruning', 'naive_plus', 'informed'], required=False,
                            help="method to be applied to merge the code tables, default: naive", default='naive')
     ## REQUIRED
     my_parser.add_argument('-all_ratios', action='store_true', required=False,
@@ -77,32 +77,32 @@ if __name__ == "__main__":
         #converted_codetable = ct.merge_codetables([converted_codetable])
         ct.calculate_codetable_support(dat_database, converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
         converted_codetable_sco = ct.codetable_in_standard_cover_order(converted_codetable)
-
         ct.calculate_codetable_usage(dat_database, converted_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database, False)
         sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
-        ct_compressed_size = ct.calculate_size_database_from_codetable(converted_codetable_sco)
-        sct_compressed_size = ct.calculate_size_database_from_codetable(sct_codetable_sco)
+        ct_compressed_size = ct.calculate_complete_size(converted_codetable_sco, sct_codetable_sco)
+        sct_compressed_size = ct.calculate_complete_size_sct(sct_codetable_sco)
 
         ratio = ct_compressed_size / sct_compressed_size
         print(f'ratio: {ratio}')
+        print(f'total number of codes: {len(converted_codetable_sco)}')
+        print(f'number codes: {len([x for x in converted_codetable_sco if converted_codetable_sco[x]["usage"] != 0])}')
     else:
         # we need to merge the tables and then calculate everything
-        codetables = []
-
+        codetables_info = []
         for i in range(args.table_idx, args.num_tables+args.table_idx):
             current_name = args.codetable_basename+'_'+str(i)+'_k'+str(args.num_tables)
             print(f'processing {current_name}...')
             aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
             aux_codetable = ct.read_codetable(current_name+'.ct', True)
             aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
-
+            info = {}
             if (args.all_ratios or args.merge_method=='pruning'):
                 # we need to calculate the local supports and usages
                 aux_dat_database = tdb.read_database_dat(current_name + '.dat')
-
+                info['database_size'] = len(aux_dat_database)
                 ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
                 print(f'num codes: {len(aux_codetable)}')
                 print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
@@ -112,41 +112,48 @@ if __name__ == "__main__":
                 aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
                 ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
                 print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
-
-                codetables.append(aux_codetable_sco)
+                info['codetable'] = aux_codetable_sco
             else:
-                codetables.append(aux_converted_codetable)
+                info['codetable'] = aux_converted_codetable
 
-            if (args.all_ratios):
-                # This must be only done if we are calculating the ratios
+
+            if (args.all_ratios or args.merge_method=='informed'):
                 aux_sct_codetable = ct.build_SCT(aux_dat_database, False)
                 aux_sct_codetable_sco = ct.codetable_in_standard_cover_order(aux_sct_codetable)
-                aux_size = ct.calculate_size_database_from_codetable(aux_codetable_sco)
-                aux_sct_size = ct.calculate_size_database_from_codetable(aux_sct_codetable_sco)
+                aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
+                aux_sct_size = ct.calculate_complete_size_sct(aux_sct_codetable_sco)
                 aux_ratio = aux_size / aux_sct_size
+                info['local_ratio'] = aux_ratio
+                info['sct_codetable'] = aux_sct_codetable_sco
                 print(f'Partition {i} ratio: {aux_ratio}')
 
+            codetables_info.append(info)
+
         dat_database = tdb.read_database_dat(args.database_file)
-        print(f'number of codetables: {len(codetables)}')
-        for c in codetables:
-            print(f'size: {len(c)}')
+        print(f'number of codetables: {len(codetables_info)}')
+        for c in codetables_info:
+            print(f'size: {len(c["codetable"])}')
 
         if args.merge_method == 'naive':
-            converted_merged_codetable = ct.merge_codetables_naive(codetables)
+            converted_merged_codetable = ct.merge_codetables_naive(codetables_info)
         elif args.merge_method == 'pruning':
-            converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
-
+            converted_merged_codetable = ct.merge_codetables_pruning(codetables_info, dat_database)
+        elif args.merge_method == 'naive_plus':
+            converted_merged_codetable = ct.merge_codetables_naive_plus (codetables_info, dat_database)
+        elif args.merge_method == 'informed':
+            print(f'not implemented yet')
+            exit(-1)
 
         print(f'merged table size: {len(converted_merged_codetable)}')
         ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.split_parallelization, reuse_files=False)
         converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
         ct.calculate_codetable_usage(dat_database, converted_merged_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
-
+        print(f'merged table size without non-used codes: {len([x  for x in converted_merged_codetable_sco if converted_merged_codetable_sco[x]["usage"] != 0])}')
         sct_codetable = ct.build_SCT(dat_database, False)
         sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
 
-        merged_size = ct.calculate_size_database_from_codetable(converted_merged_codetable_sco)
-        sct_size = ct.calculate_size_database_from_codetable(sct_codetable_sco)
+        merged_size = ct.calculate_complete_size(converted_merged_codetable_sco, sct_codetable_sco)
+        sct_size = ct.calculate_complete_size_sct(sct_codetable_sco)
         merged_ratio = merged_size / sct_size
         print(f'merged size: {merged_size}')
         print(f'sct size: {sct_size}')
@@ -158,7 +165,7 @@ if __name__ == "__main__":
 
             pruned_merged_codetable_sco = ct.codetable_in_standard_cover_order(pruned_merged_codetable)
             ct.calculate_codetable_usage(dat_database, pruned_merged_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
-            pruned_merged_size = ct.calculate_size_database_from_codetable(pruned_merged_codetable_sco)
+            pruned_merged_size = ct.calculate_complete_size(pruned_merged_codetable_sco, sct_codetable_sco)
             pruned_merged_ratio = pruned_merged_size / sct_size
             print(f'pruned_merged_ratio:{pruned_merged_ratio}')
     end = time.time()
