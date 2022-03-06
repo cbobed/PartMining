@@ -649,17 +649,17 @@ def merge_codetables_naive_plus(codetables_info, database):
             if singleton not in current_ct['codetable']:
                 current_ct['codetable'][singleton] = {'code': str(singleton), 'code_int': singleton, 'support': 0, 'usage': 0}
 
-        ct.calculate_codetable_support(database, current_ct['codetable'], args.parallel, args.split_parallelization,
+        calculate_codetable_support(database, current_ct['codetable'], args.parallel, args.split_parallelization,
                                        reuse_files=False)
         print(f'num codes: {len(current_ct["codetable"])}')
         print(f'num codes with support 0: {len([x for x in current_ct["codetable"] if current_ct["codetable"][x]["support"] == 0])}')
         for x in current_ct["codetable"] :
             if current_ct["codetable"] [x]["support"] == 0:
                 print(f'code with support 0: {current_ct["codetable"] [x]}')
-        aux_codetable_sco = ct.codetable_in_standard_cover_order(current_ct["codetable"])
-        ct.calculate_codetable_usage(database, aux_codetable_sco, args.parallel, args.split_parallelization,
+        aux_codetable_sco = codetable_in_standard_cover_order(current_ct["codetable"])
+        calculate_codetable_usage(database, aux_codetable_sco, args.parallel, args.split_parallelization,
                                      reuse_files=True)
-        aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
+        aux_size = calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
         aux_ratio = aux_size / aux_sct_size
         current_ct['global_ratio'] = aux_ratio
         print(f'Partition {i} ratio: {aux_ratio}')
