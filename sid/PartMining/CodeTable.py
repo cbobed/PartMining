@@ -714,6 +714,7 @@ def merge_codetables_informed (codetables_info, database, early_finish=False):
             if (early_finish):
                 go_on = False
             print(f'merge rejected ... ')
+    return current_codetable
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
