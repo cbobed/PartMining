@@ -642,30 +642,30 @@ def merge_codetables_naive_plus(codetables_info, database):
     aux_sct_codetable_sco = codetable_in_standard_cover_order(aux_sct_codetable)
     aux_sct_size = calculate_complete_size_sct(aux_sct_codetable_sco)
 
-    for ct in codetables_info:
+    for current_ct in codetables_info:
         ## we have to add all the singletons to the codetable beforehand
         ## we get them from the already built aux_sct_codetable
         for singleton in aux_sct_codetable_sco:
-            if singleton not in ct['codetable']:
-                ct['codetable'][singleton] = {'code': str(singleton), 'code_int': singleton, 'support': 0, 'usage': 0}
+            if singleton not in current_ct['codetable']:
+                current_ct['codetable'][singleton] = {'code': str(singleton), 'code_int': singleton, 'support': 0, 'usage': 0}
 
-        ct.calculate_codetable_support(database, ct['codetable'], args.parallel, args.split_parallelization,
+        ct.calculate_codetable_support(database, current_ct['codetable'], args.parallel, args.split_parallelization,
                                        reuse_files=False)
-        print(f'num codes: {len(ct["codetable"])}')
-        print(f'num codes with support 0: {len([x for x in ct["codetable"] if ct["codetable"][x]["support"] == 0])}')
-        for x in ct["codetable"] :
-            if ct["codetable"] [x]["support"] == 0:
-                print(f'code with support 0: {ct["codetable"] [x]}')
-        aux_codetable_sco = ct.codetable_in_standard_cover_order(ct["codetable"])
+        print(f'num codes: {len(current_ct["codetable"])}')
+        print(f'num codes with support 0: {len([x for x in current_ct["codetable"] if current_ct["codetable"][x]["support"] == 0])}')
+        for x in current_ct["codetable"] :
+            if current_ct["codetable"] [x]["support"] == 0:
+                print(f'code with support 0: {current_ct["codetable"] [x]}')
+        aux_codetable_sco = ct.codetable_in_standard_cover_order(current_ct["codetable"])
         ct.calculate_codetable_usage(database, aux_codetable_sco, args.parallel, args.split_parallelization,
                                      reuse_files=True)
         aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
         aux_ratio = aux_size / aux_sct_size
-        ct['global_ratio'] = aux_ratio
+        current_ct['global_ratio'] = aux_ratio
         print(f'Partition {i} ratio: {aux_ratio}')
 
     ratios = [ct['global_ratio'] for ct in codetables_info]
-    return ct[ratios.index(max[ratios])]['codetable']
+    return current_ct[ratios.index(max[ratios])]['codetable']
 
     ## we order the candidates according to their (global compression ratio * current_codetable_similarity).
 
