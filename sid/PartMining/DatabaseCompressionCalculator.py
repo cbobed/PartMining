@@ -141,8 +141,7 @@ if __name__ == "__main__":
         elif args.merge_method == 'naive_plus':
             converted_merged_codetable = ct.merge_codetables_naive_plus (codetables_info, dat_database)
         elif args.merge_method == 'informed':
-            print(f'not implemented yet')
-            exit(-1)
+            converted_merged_codetable = ct.merge_codetables_informed(codetables_info, dat_database)
 
         print(f'merged table size: {len(converted_merged_codetable)}')
         ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.split_parallelization, reuse_files=False)
