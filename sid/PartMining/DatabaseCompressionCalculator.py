@@ -81,9 +81,8 @@ if __name__ == "__main__":
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database, False)
-        sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
-        ct_compressed_size = ct.calculate_complete_size(converted_codetable_sco, sct_codetable_sco)
-        sct_compressed_size = ct.calculate_complete_size_sct(sct_codetable_sco)
+        ct_compressed_size = ct.calculate_complete_size(converted_codetable_sco, sct_codetable)
+        sct_compressed_size = ct.calculate_complete_size_sct(sct_codetable)
 
         ratio = ct_compressed_size / sct_compressed_size
         print(f'ratio: {ratio}')
@@ -119,12 +118,11 @@ if __name__ == "__main__":
 
             if (args.all_ratios or args.merge_method=='informed'):
                 aux_sct_codetable = ct.build_SCT(aux_dat_database, False)
-                aux_sct_codetable_sco = ct.codetable_in_standard_cover_order(aux_sct_codetable)
-                aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
-                aux_sct_size = ct.calculate_complete_size_sct(aux_sct_codetable_sco)
+                aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable)
+                aux_sct_size = ct.calculate_complete_size_sct(aux_sct_codetable)
                 aux_ratio = aux_size / aux_sct_size
                 info['local_ratio'] = aux_ratio
-                info['sct_codetable'] = aux_sct_codetable_sco
+                info['sct_codetable'] = aux_sct_codetable
                 print(f'Partition {i} ratio: {aux_ratio}')
 
             codetables_info.append(info)
@@ -149,10 +147,10 @@ if __name__ == "__main__":
         ct.calculate_codetable_usage(dat_database, converted_merged_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
         print(f'merged table size without non-used codes: {len([x  for x in converted_merged_codetable_sco if converted_merged_codetable_sco[x]["usage"] != 0])}')
         sct_codetable = ct.build_SCT(dat_database, False)
-        sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
+        # sct_codetable_sco = ct.codetable_in_standard_cover_order(sct_codetable)
 
-        merged_size = ct.calculate_complete_size(converted_merged_codetable_sco, sct_codetable_sco)
-        sct_size = ct.calculate_complete_size_sct(sct_codetable_sco)
+        merged_size = ct.calculate_complete_size(converted_merged_codetable_sco, sct_codetable)
+        sct_size = ct.calculate_complete_size_sct(sct_codetable)
         merged_ratio = merged_size / sct_size
         print(f'merged size: {merged_size}')
         print(f'sct size: {sct_size}')
@@ -164,7 +162,7 @@ if __name__ == "__main__":
 
             pruned_merged_codetable_sco = ct.codetable_in_standard_cover_order(pruned_merged_codetable)
             ct.calculate_codetable_usage(dat_database, pruned_merged_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
-            pruned_merged_size = ct.calculate_complete_size(pruned_merged_codetable_sco, sct_codetable_sco)
+            pruned_merged_size = ct.calculate_complete_size(pruned_merged_codetable_sco, sct_codetable)
             pruned_merged_ratio = pruned_merged_size / sct_size
             print(f'pruned_merged_ratio:{pruned_merged_ratio}')
     end = time.time()
