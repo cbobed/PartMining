@@ -649,7 +649,7 @@ def merge_codetables_naive_plus(codetables_info, database):
             if singleton not in current_ct['codetable']:
                 current_ct['codetable'][singleton] = {'code': str(singleton), 'code_int': singleton, 'support': 0, 'usage': 0}
 
-        calculate_codetable_support(database, current_ct['codetable'], args.parallel, args.split_parallelization,
+        calculate_codetable_support(database, current_ct['codetable'], False, False,
                                        reuse_files=False)
         print(f'num codes: {len(current_ct["codetable"])}')
         print(f'num codes with support 0: {len([x for x in current_ct["codetable"] if current_ct["codetable"][x]["support"] == 0])}')
@@ -657,7 +657,7 @@ def merge_codetables_naive_plus(codetables_info, database):
             if current_ct["codetable"] [x]["support"] == 0:
                 print(f'code with support 0: {current_ct["codetable"] [x]}')
         aux_codetable_sco = codetable_in_standard_cover_order(current_ct["codetable"])
-        calculate_codetable_usage(database, aux_codetable_sco, args.parallel, args.split_parallelization,
+        calculate_codetable_usage(database, aux_codetable_sco, False, False,
                                      reuse_files=True)
         aux_size = calculate_complete_size(aux_codetable_sco, aux_sct_codetable_sco)
         aux_ratio = aux_size / aux_sct_size
@@ -693,9 +693,9 @@ def merge_codetables_informed (codetables_info, database, early_finish=False):
         next_candidate_index = candidate_similarity_values.index(max(candidate_similarity_values))
 
         aux_codetable = merge_codetables_naive([current_codetable, codetables_info[next_candidate_index]['codetable']])
-        calculate_codetable_support(database, aux_codetable, True, True, reuse_files=False)
+        calculate_codetable_support(database, aux_codetable, False, False, reuse_files=False)
         aux_codetable_sco = codetable_in_standard_cover_order(aux_codetable)
-        calculate_codetable_usage(database, aux_codetable_sco, True, True, reuse_files=True)
+        calculate_codetable_usage(database, aux_codetable_sco, False, False, reuse_files=True)
 
         aux_compressed_size = calculate_complete_size(aux_codetable_sco, global_sct_codetable_sco)
         aux_ratio = aux_compressed_size / sct_compressed_size
