@@ -435,7 +435,7 @@ def prune_by_usage_threshold(codetable, threshold):
            'code_set':codetable[i]['code_set']} for i in codetable if codetable[i]['usage'] > threshold or len(codetable[i]['code']) == 1}
 
 
-def calculate_generalized_jaccard_distance_from_scts(sct_1, sct_2):
+def calculate_generalized_jaccard_index_from_scts(sct_1, sct_2):
     num = 0.0;
     den = 0.0;
     for item in set(sct_1.keys()).union(sct_2.keys()):
@@ -444,7 +444,7 @@ def calculate_generalized_jaccard_distance_from_scts(sct_1, sct_2):
                     sct_2[item]['support'] if item in sct_2 else 0)
         den += max(sct_1[item]['support'] if item in sct_1 else 0,
                    sct_2[item]['support'] if item in sct_2 else 0)
-    return 1.0 - (num/den)
+    return (num/den)
 
 ## naive way of merging the codetables
 ## for convenience we work here with integers (we kept the codetables as string tokens to be able to handle the vector models)
@@ -712,10 +712,12 @@ def merge_codetables_informed (codetables_info, database, early_finish=False):
     while (len(to_process) != 0 and go_on):
         print(f'merged: {merged}')
         print(f'to_process: {to_process}')
-        candidate_similarity_pairs = [ (idx,calculate_generalized_jaccard_distance_from_scts(codetables_info[idx]['sct_codetable'], current_sct) * codetables_info[idx]['global_ratio'])
+        # we want to add first those with high compression ratio (low value) and low similarity (low gji)
+        candidate_similarity_pairs = [ (idx,calculate_generalized_jaccard_index_from_scts(codetables_info[idx]['sct_codetable'], current_sct) * codetables_info[idx]['global_ratio'])
                                         for idx in to_process ]
         candidate_similarity_values = [x[1] for x in candidate_similarity_pairs]
-        candidate_pos =  candidate_similarity_values.index(max(candidate_similarity_values))
+        # we want the lowest value
+        candidate_pos =  candidate_similarity_values.index(min(candidate_similarity_values))
         print (candidate_similarity_pairs)
         next_candidate_index = candidate_similarity_pairs[candidate_pos][0]
         print(f'next_candidate: {next_candidate_index}')
