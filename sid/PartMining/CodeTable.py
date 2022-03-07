@@ -712,7 +712,7 @@ def merge_codetables_informed (codetables_info, database, early_finish=False):
     while (len(to_process) != 0 and go_on):
         print(f'merged: {merged}')
         print(f'to_process: {to_process}')
-        candidate_similarity_pairs = [ (idx,calculate_generalized_jaccard_distance_from_scts(codetables_info[idx]['sct_codetable'], current_sct) * math.exp(- codetables_info[idx]['global_ratio']))
+        candidate_similarity_pairs = [ (idx,calculate_generalized_jaccard_distance_from_scts(codetables_info[idx]['sct_codetable'], current_sct) * codetables_info[idx]['global_ratio'])
                                         for idx in to_process ]
         candidate_similarity_values = [x[1] for x in candidate_similarity_pairs]
         candidate_pos =  candidate_similarity_values.index(max(candidate_similarity_values))
