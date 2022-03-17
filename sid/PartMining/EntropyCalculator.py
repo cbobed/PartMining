@@ -25,6 +25,10 @@ if __name__ == "__main__":
                            help="file of the database")
     my_parser.add_argument('-vocab_size', action='store', required=False, type=int,
                            help="original vocab size")
+    my_parser.add_argument('-original_db_trans_size', action='store', required=False, type=int,
+                           help="original database size (in transactions)")
+    my_parser.add_argument('-original_db_item_size', action='store', required=False, type=int,
+                           help="original database size (in items)")
     args=my_parser.parse_args()
 
     start_time = time.time()
@@ -39,6 +43,7 @@ if __name__ == "__main__":
     item_entropy = {}
     num_items = 0
     global_item_entropy = 0
+    num_trans = len(database_transactions)
     for t in database_transactions:
         for item in database_transactions[t]:
             if item not in item_count:
@@ -50,12 +55,23 @@ if __name__ == "__main__":
         adjusted_vocab_size = args.vocab_size
     else:
         adjusted_vocab_size = len(item_count)
+
+    if args.original_db_item_size is not None:
+        original_item_size = args.original_db_item_size
+    else:
+        original_item_size = num_items
+
+    if args.original_db_trans_size is not None:
+        original_trans_size = args.original_db_trans_size
+    else:
+        original_trans_size = num_trans
+
     for item in item_count:
         p_x = float(item_count[item]) / num_items
         item_entropy[item] = -p_x * math.log(p_x,2) ## in fact would be the code length
         global_item_entropy += item_entropy[item]
 
-    # we have to normalize the value using the maixmum diversity index (in this case, log_2 (len(item_count))
+    # we have to normalize the value using the maximum diversity index (in this case, log_2 (len(item_count))
     normalized_global_item_entropy = global_item_entropy / math.log(len(item_count), 2)
     adjusted_normalized_global_item_entropy = global_item_entropy / math.log(adjusted_vocab_size, 2)
 
@@ -69,6 +85,11 @@ if __name__ == "__main__":
         avg_length_normalized_transaction_entropy += length_normalized_transaction_entropy[t]
     avg_length_normalized_transaction_entropy /= float(len(database_transactions))
 
+    ## the weighted entropy (regarding the transaction and item database size)
+
+    trans_weighted_adjusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_trans / original_trans_size)
+    item_weighted_ajusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_items / original_item_size)
+
     print(f'vocab size: {len(item_count)}')
     print(f'adjusted vocab size: {adjusted_vocab_size}')
     print('-----------------------')
@@ -78,3 +99,5 @@ if __name__ == "__main__":
     print('***********************')
     print(f'average length normalized transaction entropy: {avg_length_normalized_transaction_entropy}')
     print('-----------------------')
+    print(f'trans weighted adjusted normalized global item entropy: {trans_weighted_adjusted_normalized_global_item_entropy}')
+    print(f'item weighted adjusted normalized global item entropy: {item_weighted_ajusted_normalized_global_item_entropy}')
