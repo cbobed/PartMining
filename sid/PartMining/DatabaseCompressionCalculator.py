@@ -17,6 +17,8 @@ import CodeTable as ct
 import argparse
 import time
 import logging
+import os.path
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
@@ -94,27 +96,29 @@ if __name__ == "__main__":
         for i in range(args.table_idx, args.num_tables+args.table_idx):
             current_name = args.codetable_basename+'_'+str(i)+'_k'+str(args.num_tables)
             print(f'processing {current_name}...')
-            aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
-            aux_codetable = ct.read_codetable(current_name+'.ct', True)
-            aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
-            info = {}
-            if (args.all_ratios or args.merge_method=='pruning'):
-                # we need to calculate the local supports and usages
-                aux_dat_database = tdb.read_database_dat(current_name + '.dat')
-                info['database_size'] = len(aux_dat_database)
-                ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
-                print(f'num codes: {len(aux_codetable)}')
-                print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
-                for x in aux_converted_codetable:
-                    if aux_converted_codetable[x]["support"] == 0:
-                        print(f'code with support 0: {aux_converted_codetable[x]}')
-                aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
-                ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
-                print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
-                info['codetable'] = aux_codetable_sco
-            else:
-                info['codetable'] = aux_converted_codetable
-
+            if (os.path.exists(current_name + '.db.analysis.txt') and
+                        os.path.exists(current_name+'.ct') and
+                        os.path.exists(current_name + '.dat')):
+                aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
+                aux_codetable = ct.read_codetable(current_name+'.ct', True)
+                aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
+                info = {}
+                if (args.all_ratios or args.merge_method=='pruning'):
+                    # we need to calculate the local supports and usages
+                    aux_dat_database = tdb.read_database_dat(current_name + '.dat')
+                    info['database_size'] = len(aux_dat_database)
+                    ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
+                    print(f'num codes: {len(aux_codetable)}')
+                    print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
+                    for x in aux_converted_codetable:
+                        if aux_converted_codetable[x]["support"] == 0:
+                            print(f'code with support 0: {aux_converted_codetable[x]}')
+                    aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
+                    ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
+                    print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
+                    info['codetable'] = aux_codetable_sco
+                else:
+                    info['codetable'] = aux_converted_codetable
 
             if (args.all_ratios or args.merge_method=='informed'):
                 aux_sct_codetable = ct.build_SCT(aux_dat_database, False)
