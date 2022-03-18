@@ -15,7 +15,7 @@ import csv
 class Headers:
     GLOBAL_VOCAB_SIZE = 'global_vocab_size'
     GLOBAL_FILE_ENTROPY = 'global_file_entropy'
-    GLOBAL_FILE_NORMAL_ENTROPY = 'global_file_norm_entropy'
+    GLOBAL_FILE_WEIGHTED_ENTROPY = 'global_file_weighted_entropy'
     NUM_CLUSTERS = 'num_clusters'
     METHOD = 'method'
     VECTOR_TIME = 'vector_time'
@@ -23,15 +23,18 @@ class Headers:
     MERGE_TIME = 'merge_time'
     RATIOS = 'ratios'
     MERGED_RATIO = 'merged_ratio'
+    MERGED_CODES = 'merged_codes'
     MINING_TIMES = 'mining_times'
     PARTITION_INFO = 'partition_info'
     VOCAB_SIZE = 'vocab_size'
     ADJUSTED_VOCAB_SIZE = 'adjusted_vocab_size'
     ENTROPY = 'entropy'
     NORMAL_ENTROPY = 'normal_entropy'
+    WEIGHTED_ENTROPY = 'weighted_entropy'
     # average partition entropy
     AVERAGE_ENTROPY = 'avg_entropy'
     AVERAGE_NORM_ENTROPY = 'avg_norm_entropy'
+    TOTAL_WEIGHTED_ENTROPY = 'weighted_norm_entropy'
     AVERAGE_RATIO = 'avg_ratio'
     AVERAGE_VOCAB_SIZE = 'avg_vocab_size'
     TIME_MAX = 'time_max'
@@ -135,6 +138,8 @@ if __name__ == "__main__":
 
                         current_row = reader.__next__()
                         current_exec[Headers.MERGED_RATIO] = float(current_row[1])
+                        current_row = reader.__next__()
+                        current_exec[Headers.MERGED_CODES] = float(current_row[1])
 
                         ## Mining times
                         current_row = reader.__next__()
@@ -158,6 +163,8 @@ if __name__ == "__main__":
                             current_exec[Headers.PARTITION_INFO][i][Headers.ENTROPY] = float(current_row[1])
                             current_row = reader.__next__()
                             current_exec[Headers.PARTITION_INFO][i][Headers.NORMAL_ENTROPY] = float(current_row[1])
+                            current_row = reader.__next__()
+                            current_exec[Headers.PARTITION_INFO][i][Headers.WEIGHTED_ENTROPY] = float(current_row[1])
                             current_row = next(reader, None)
                         print(current_exec)
             except Exception as e:
@@ -176,6 +183,7 @@ if __name__ == "__main__":
                     # average partition entropy
                     current_exec[Headers.AVERAGE_ENTROPY] = sum([current_exec[Headers.PARTITION_INFO][i][Headers.ENTROPY] for i in range(current_exec[Headers.NUM_CLUSTERS])]) / current_exec[Headers.NUM_CLUSTERS]
                     current_exec[Headers.AVERAGE_NORM_ENTROPY] = sum([current_exec[Headers.PARTITION_INFO][i][Headers.NORMAL_ENTROPY] for i in range(current_exec[Headers.NUM_CLUSTERS])]) / current_exec[Headers.NUM_CLUSTERS]
+                    current_exec[Headers.TOTAL_WEIGHTED_ENTROPY] = sum([current_exec[Headers.PARTITION_INFO][i][Headers.WEIGHTED_ENTROPY] for i in range(current_exec[Headers.NUM_CLUSTERS])])
                     current_exec[Headers.AVERAGE_RATIO] = sum([current_exec[Headers.RATIOS][i] for i in range(current_exec[Headers.NUM_CLUSTERS])])/current_exec[Headers.NUM_CLUSTERS]
                     current_exec[Headers.AVERAGE_VOCAB_SIZE] = sum([current_exec[Headers.PARTITION_INFO][i][Headers.VOCAB_SIZE] for i in range(current_exec[Headers.NUM_CLUSTERS])]) / current_exec[Headers.NUM_CLUSTERS]
                     current_exec[Headers.TIME_MAX] = time_max = current_exec[Headers.VECTOR_TIME] + \
@@ -230,6 +238,13 @@ if __name__ == "__main__":
 
                 for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
+                        current_datasheet.write(line, col+1, Headers.TOTAL_WEIGHTED_ENTROPY+'_'+str(batch))
+                        current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.TOTAL_WEIGHTED_ENTROPY])
+                        line += 1
+                line+=1
+
+                for batch in range(1, BATCH_NUMBER):
+                    if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.AVERAGE_RATIO+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.AVERAGE_RATIO])
                         line += 1
@@ -239,6 +254,13 @@ if __name__ == "__main__":
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
                         current_datasheet.write(line, col+1, Headers.MERGED_RATIO+'_'+str(batch))
                         current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.MERGED_RATIO])
+                        line += 1
+                line+=1
+
+                for batch in range(1, BATCH_NUMBER):
+                    if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
+                        current_datasheet.write(line, col+1, Headers.MERGED_CODES+'_'+str(batch))
+                        current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.MERGED_CODES])
                         line += 1
                 line+=1
 
