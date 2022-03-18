@@ -15,7 +15,7 @@ import csv
 class Headers:
     GLOBAL_VOCAB_SIZE = 'global_vocab_size'
     GLOBAL_FILE_ENTROPY = 'global_file_entropy'
-    GLOBAL_FILE_WEIGHTED_ENTROPY = 'global_file_weighted_entropy'
+    GLOBAL_FILE_NORMAL_ENTROPY = 'global_file_normal_entropy'
     NUM_CLUSTERS = 'num_clusters'
     METHOD = 'method'
     VECTOR_TIME = 'vector_time'
@@ -64,11 +64,12 @@ DATASET_NAMES = [
 	"wine.dat"
                  ]
 
-BATCH_NUMBER = 6
-NUMBER_BLOCKS = 2 
+BATCH_NUMBER = 6 
+NUMBER_BLOCKS = 1 
 #BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
-BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg30')
-OUTPUT_FILE='200d-5-10-neg30-grouped.xls'
+BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
+#BATCH_DIR = os.path.join('.', 'txmeans_batch_results')
+OUTPUT_FILE='200d-5-10-neg-grouped-latest.xls'
 
 def treat_time_cell (content):
     aux = content.split('m')
@@ -171,7 +172,6 @@ if __name__ == "__main__":
                 print(f'Marking {batch} as INVALID')
                 print(e)
                 current_data[Headers.INVALID_BATCH] = True
-
 
 
     for dataset in DATASET_NAMES:
