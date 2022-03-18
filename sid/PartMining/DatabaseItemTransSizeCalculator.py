@@ -17,6 +17,6 @@ if __name__ == "__main__":
 
     num_items = 0
     for t in database:
-        num_items += len(t)
+        num_items += len(database[t])
     with open(args.database_file+".itemSize", "w") as output:
         output.write(str(num_items))
