@@ -124,7 +124,10 @@ if __name__ == "__main__":
                 aux_sct_codetable = ct.build_SCT(aux_dat_database, False)
                 aux_size = ct.calculate_complete_size(aux_codetable_sco, aux_sct_codetable)
                 aux_sct_size = ct.calculate_complete_size_sct(aux_sct_codetable)
-                aux_ratio = aux_size / aux_sct_size
+                if (aux_sct_size != 0):
+                    aux_ratio = aux_size / aux_sct_size
+                else:
+                    aux_ratio = -1.0
                 info['local_ratio'] = aux_ratio
                 info['sct_codetable'] = aux_sct_codetable
                 print(f'Partition {i} ratio: {aux_ratio}')
