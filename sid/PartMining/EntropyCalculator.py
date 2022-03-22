@@ -66,38 +66,39 @@ if __name__ == "__main__":
     else:
         original_trans_size = num_trans
 
-    for item in item_count:
-        p_x = float(item_count[item]) / num_items
-        item_entropy[item] = -p_x * math.log(p_x,2) ## in fact would be the code length
-        global_item_entropy += item_entropy[item]
+    if num_items != 0:
+        for item in item_count:
+            p_x = float(item_count[item]) / num_items
+            item_entropy[item] = -p_x * math.log(p_x,2) ## in fact would be the code length
+            global_item_entropy += item_entropy[item]
 
-    # we have to normalize the value using the maximum diversity index (in this case, log_2 (len(item_count))
-    normalized_global_item_entropy = global_item_entropy / math.log(len(item_count), 2)
-    adjusted_normalized_global_item_entropy = global_item_entropy / math.log(adjusted_vocab_size, 2)
+        # we have to normalize the value using the maximum diversity index (in this case, log_2 (len(item_count))
+        normalized_global_item_entropy = global_item_entropy / math.log(len(item_count), 2)
+        adjusted_normalized_global_item_entropy = global_item_entropy / math.log(adjusted_vocab_size, 2)
 
-    length_normalized_transaction_entropy = {}
-    avg_length_normalized_transaction_entropy = 0
-    for t in database_transactions:
-        length_normalized_transaction_entropy[t] = 0
-        for item in database_transactions[t]:
-            length_normalized_transaction_entropy[t] += item_entropy[item]
-        length_normalized_transaction_entropy[t] /= float(len(database_transactions[t]))
-        avg_length_normalized_transaction_entropy += length_normalized_transaction_entropy[t]
-    avg_length_normalized_transaction_entropy /= float(len(database_transactions))
+        length_normalized_transaction_entropy = {}
+        avg_length_normalized_transaction_entropy = 0
+        for t in database_transactions:
+            length_normalized_transaction_entropy[t] = 0
+            for item in database_transactions[t]:
+                length_normalized_transaction_entropy[t] += item_entropy[item]
+            length_normalized_transaction_entropy[t] /= float(len(database_transactions[t]))
+            avg_length_normalized_transaction_entropy += length_normalized_transaction_entropy[t]
+        avg_length_normalized_transaction_entropy /= float(len(database_transactions))
 
-    ## the weighted entropy (regarding the transaction and item database size)
+        ## the weighted entropy (regarding the transaction and item database size)
 
-    trans_weighted_adjusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_trans / original_trans_size)
-    item_weighted_ajusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_items / original_item_size)
+        trans_weighted_adjusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_trans / original_trans_size)
+        item_weighted_ajusted_normalized_global_item_entropy = adjusted_normalized_global_item_entropy * (num_items / original_item_size)
 
-    print(f'vocab size: {len(item_count)}')
-    print(f'adjusted vocab size: {adjusted_vocab_size}')
+    print(f'vocab size: {len(item_count) if num_items != 0 else 0 }')
+    print(f'adjusted vocab size: {adjusted_vocab_size if num_items != 0 else 0 }')
     print('-----------------------')
-    print(f'global item entropy: {global_item_entropy}')
-    print(f'normalized global item entropy {normalized_global_item_entropy}')
-    print(f'adjusted normalized global item entropy {adjusted_normalized_global_item_entropy}')
+    print(f'global item entropy: {global_item_entropy if num_items != 0 else 0 }')
+    print(f'normalized global item entropy {normalized_global_item_entropy if num_items != 0 else 0 }')
+    print(f'adjusted normalized global item entropy {adjusted_normalized_global_item_entropy if num_items != 0 else 0 }')
     print('***********************')
-    print(f'average length normalized transaction entropy: {avg_length_normalized_transaction_entropy}')
+    print(f'average length normalized transaction entropy: {avg_length_normalized_transaction_entropy if num_items != 0 else 0 }')
     print('-----------------------')
-    print(f'trans weighted adjusted normalized global item entropy: {trans_weighted_adjusted_normalized_global_item_entropy}')
-    print(f'item weighted adjusted normalized global item entropy: {item_weighted_ajusted_normalized_global_item_entropy}')
+    print(f'trans weighted adjusted normalized global item entropy: {trans_weighted_adjusted_normalized_global_item_entropy if num_items != 0 else 0 }')
+    print(f'item weighted adjusted normalized global item entropy: {item_weighted_ajusted_normalized_global_item_entropy if num_items != 0 else 0 }')
