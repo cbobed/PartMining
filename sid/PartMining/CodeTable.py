@@ -63,6 +63,25 @@ def read_codetable(filename, load_all):
                     label+=1
     return codes
 
+def read_codetable_dat_format (filename):
+    codes = {}
+    label = 0
+    with open(filename, mode='rt', encoding='UTF-8') as file:
+        for line in file:
+            item_line = list(filter(None, line.rstrip('\n').split(' ')))
+            if (item_line[-2] == "#SUP:"):
+                usage = 0
+                support = int(item_line[-1])
+                codes[label] = {'code': item_line[:-2], 'usage': int(usage), 'support': int(support)}
+                label += 1
+            elif (item_line[-1].startswith('#SUP:')):
+                usage = 0
+                support = int(item_line[-1].split(':')[1])
+                codes[label] = {'code': item_line[:-1], 'usage': int(usage), 'support': int(support)}
+                label += 1
+    return codes
+
+
 ## it assumes that it has been already sorted if required (calculate_cover_order)
 def store_codetable_dat(codetable, filename):
     with open(filename, mode='w', encoding='UTF-8') as file:
@@ -449,35 +468,44 @@ def calculate_generalized_jaccard_index_from_scts(sct_1, sct_2):
 ## naive way of merging the codetables
 ## for convenience we work here with integers (we kept the codetables as string tokens to be able to handle the vector models)
 def merge_codetables_naive(codetables_info):
+
+    logging.debug(f'deduplicating codes')
+    # table i vs table j in each, we store the
+    # repeated in to_omit[j]
+    to_omit = {}
+    for i in range(len(codetables_info)-1):
+        logging.debug(f'processing {i} {len(codetables_info[i]["codetable"])}against ... ')
+        for j in range(i+1, len(codetables_info)):
+            logging.debug(f' ... {j} - {len(codetables_info[j]["codetable"])}')
+            if j not in to_omit:
+                to_omit[j] = set()
+            table_i = codetables_info[i]['codetable']
+            table_j = codetables_info[j]['codetable']
+            ## deduplicate i against j
+            for code_i_label in table_i:
+                if not (i in to_omit and code_i_label in to_omit[i]):
+                    for code_j_label in table_j:
+                        if code_j_label not in to_omit[j]:
+                            if 'code_set' in table_i[code_i_label]:
+                                set_i = table_i[code_i_label]['code_set']
+                            else:
+                                set_i = set([int(item) for item in table_i[code_i_label]['code']])
+                            if 'code_set' in table_j[code_j_label]:
+                                set_j = table_j[code_j_label]['code_set']
+                            else:
+                                set_j = set([int(item) for item in table_j[code_j_label]['code']])
+                            if set_i == set_j:
+                                to_omit[j].add(code_j_label)
     merged = {}
     non_colision_labelbase = 0
-    for ct in codetables_info:
-        for label in ct['codetable']:
-            current_label = str(non_colision_labelbase) + '_' + str(label)
-            merged[current_label] = ct['codetable'][label]
+    for i in range(len(codetables_info)):
+        ## we skip the codes marked to be omitted
+        for label in codetables_info[i]['codetable']:
+            if not (i in to_omit and label in to_omit[i]):
+                current_label = str(non_colision_labelbase) + '_' + str(label)
+                merged[current_label] = codetables_info[i]['codetable'][label]
         non_colision_labelbase += 1
-    # we keep track of the codes that are duplicated
-    to_omit = set()
-    merged_key_list = list(merged.keys())
-    for i in range(len(merged_key_list)):
-        if merged_key_list[i] not in to_omit:
-            for j in range(i + 1, len(merged_key_list)):
-                if merged_key_list[j] not in to_omit:
-                    # depending on how the table has been obtained it might or not have the code_set field
-                    ## converted using the analysis table (convert_int_codetable) => it has
-                    ## loaded from file => it hasn't
-                    if 'code_set' in merged[merged_key_list[i]]:
-                        set_i = merged[merged_key_list[i]]['code_set']
-                    else:
-                        set_i = set([int(item) for item in merged[merged_key_list[i]]['code']])
-                    if 'code_set' in merged[merged_key_list[j]]:
-                        set_j = merged[merged_key_list[j]]['code_set']
-                    else:
-                        set_j = set([int(item) for item in merged[merged_key_list[j]]['code']])
-                    if set_i == set_j:
-                        to_omit.add(merged_key_list[j])
-    # we get rid of the duplicated entries in the codetable
-    [merged.pop(code) for code in to_omit]
+    logging.debug('merging done ...')
 
     for label in merged:
         if 'code_int' in merged[label]:

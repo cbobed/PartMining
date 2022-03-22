@@ -17,8 +17,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
 
-    my_parser.add_argument('-database_file', action='store', required=True,
-                           help="file of the database (must be the .dat)")
+    # my_parser.add_argument('-database_file', action='store', required=True,
+    #                        help="file of the database (must be the .dat)")
     ## REQUIRED
     my_parser.add_argument('-codetable_basename', action='store', required=False,
                                help="basename of the files of the codetables to be merged")
@@ -45,12 +45,12 @@ if __name__ == "__main__":
         aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
         aux_codetable = ct.read_codetable(current_name+'.ct', True)
         aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
-        codetables.append(aux_converted_codetable)
+        codetables.append({'codetable': aux_converted_codetable})
 
-    dat_database = tdb.read_database_dat(args.database_file)
+    # dat_database = tdb.read_database_dat(args.database_file)
     print(f'number of codetables: {len(codetables)}')
     for c in codetables:
-        print(f'size: {len(c)}')
+        print(f'size: {len(c["codetable"])}')
 
     if args.merge_method == 'naive':
         converted_merged_codetable = ct.merge_codetables_naive(codetables)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
 
     print(f'merged table size: {len(converted_merged_codetable)}')
-    ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.parallel, reuse_files=False)
-    converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
+    # ct.calculate_codetable_support(dat_database, converted_merged_codetable, args.parallel, args.parallel, reuse_files=False)
+    # converted_merged_codetable_sco = ct.codetable_in_standard_cover_order(converted_merged_codetable)
 
-    ct.store_codetable_dat(converted_merged_codetable_sco, args.codetable_basename+"-KRIMPMerged.ct")
+    ct.store_codetable_dat(converted_merged_codetable, args.codetable_basename+"-KRIMPMerged.ct")
