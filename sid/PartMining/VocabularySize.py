@@ -41,4 +41,3 @@ if __name__ == "__main__":
             num_items +=1
 
     print (len(item_count))
-    print(sorted(item_count.keys()))
