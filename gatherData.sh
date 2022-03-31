@@ -1,7 +1,7 @@
 ## $1: dataset .dat filename
 ## $2: dimensions
 
-NUM_CLUSTERS="4 8"
+NUM_CLUSTERS="4 8 16"
 # METHODS="k_means random"
 METHODS="k_means random"
 
@@ -19,12 +19,14 @@ CSV_FILE="$1"-info.csv
 VOCAB_SIZE=`cat "$1"-vocabSize`
 FILE_ENTROPY=`head -6 "$1".entropy | tail -1 |awk '{ print $5}'`
 FILE_NORMAL_ENTROPY=`head -7 "$1".entropy | tail -1 | awk '{ print $6}'`
+FILE_WEIGHTED_ENTROPY=`head -11 "$1".entropy | tail -1 | awk '{ print $8}'`
 
 > $CSV_FILE
 
 output "vocabSize" "$VOCAB_SIZE" "$CSV_FILE"
 output "fileEntropy" "$FILE_ENTROPY" "$CSV_FILE"
 output "fileNormalEntropy" "$FILE_NORMAL_ENTROPY" "$CSV_FILE"
+output "fileWeightedEntropy" "$FILE_WEIGHTED_ENTROPY" "$CSV_FILE" 
 
 for N in $NUM_CLUSTERS; do 
 	for M in $METHODS; do 
@@ -53,7 +55,8 @@ for N in $NUM_CLUSTERS; do
 		PART_VOCAB_SIZES=() 
 		PART_ADJUSTED_VOCAB=()
 		PART_ITEM_ENTROPY=()
-		PART_NORM_ITEM_ENTROPY=() 
+		PART_NORM_ITEM_ENTROPY=()
+		PART_WEIGHTED_ENTROPY=() 
 		
 		for (( COUNT=0; COUNT < N; COUNT++ )) 
 		do	
@@ -75,6 +78,7 @@ for N in $NUM_CLUSTERS; do
 				PART_ADJUSTED_VOCAB+=( `head -3 "$PART_FILENAME" | tail -1 | awk '{ print $4; }'` ) 
 				PART_ITEM_ENTROPY+=( `head -6 "$PART_FILENAME" | tail -1 | awk '{ print $5; }'` )
 				PART_NORM_ITEM_ENTROPY+=( `head -7 "$PART_FILENAME" | tail -1 | awk '{ print $6; }'` )
+				PART_WEIGHTED_ENTROPY+=( `head -11 "$PART_FILENAME" | tail -1 | awk '{ print $8; }'` )
 				
 			else 
 				## We are dealing prematurely with the merged Ratio 
@@ -142,6 +146,7 @@ for N in $NUM_CLUSTERS; do
 			output "adjustedVocab" ${PART_ADJUSTED_VOCAB[$COUNT]} "$CSV_FILE"
 			output "entropy" ${PART_ITEM_ENTROPY[$COUNT]} "$CSV_FILE"
 			output "normEntropy" ${PART_NORM_ITEM_ENTROPY[$COUNT]} "$CSV_FILE"
+			output "weightedEntropy" ${PART_WEIGHTED_ENTROPY[$COUNT]} "$CSV_FILE"
 		
 		done 
 				
