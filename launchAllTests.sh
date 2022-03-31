@@ -5,7 +5,7 @@ RESULTS_DATABASES_DIR=output_databases
 
 mkdir $OUTPUT_DIR
 rm "$RESULTS_DATABASES_DIR"/*
-for BATCH_ID in `seq 1 1 10`; do 
+for BATCH_ID in `seq 1 1 1`; do 
 	./launchTests.sh 
 	mkdir "$OUTPUT_DIR"/batch-"$BATCH_ID"
 	mv "$RESULTS_DATABASES_DIR"/* "$OUTPUT_DIR"/batch-"$BATCH_ID"

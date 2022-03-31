@@ -46,7 +46,6 @@ class Headers:
 DATASET_NAMES = [
 	"adult.dat",
 	"anneal.dat",
-	"breast.dat",
 	"chessBig.dat",
 	"chess.dat",
 	"connect.dat",
@@ -57,7 +56,6 @@ DATASET_NAMES = [
 	"letrecog.dat",
 	"mushroom.dat",
 	"nursery.dat",
-	"pageblocks.dat",
 	"pendigits.dat",
 	"pima.dat",
 	"tictactoe.dat",
@@ -67,10 +65,11 @@ DATASET_NAMES = [
 BATCH_NUMBER = 6 
 NUMBER_BLOCKS = 1 
 #BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
-BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
-#BATCH_DIR = os.path.join('.', 'txmeans_batch_results')
-OUTPUT_FILE='200d-5-10-neg-grouped-latest.xls'
-
+#BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
+BATCH_DIR = os.path.join('.', 'tkmeans_batch_results', 'k16')
+# BATCH_DIR = os.path.join('.', 'txmeans_batch_results')
+OUTPUT_FILE='tkmeans-grouped-k16.xls'
+#OUTPUT_FILE='test.xls' 
 def treat_time_cell (content):
     aux = content.split('m')
     min = float(aux[0])
@@ -167,7 +166,7 @@ if __name__ == "__main__":
                             current_row = reader.__next__()
                             current_exec[Headers.PARTITION_INFO][i][Headers.WEIGHTED_ENTROPY] = float(current_row[1])
                             current_row = next(reader, None)
-                        print(current_exec)
+                        #print(current_exec)
             except Exception as e:
                 print(f'Marking {batch} as INVALID')
                 print(e)

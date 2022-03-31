@@ -110,9 +110,9 @@ if __name__ == "__main__":
                     ct.calculate_codetable_support(aux_dat_database, aux_converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
                     print(f'num codes: {len(aux_codetable)}')
                     print(f'num codes with support 0: {len([x for x in aux_converted_codetable if aux_converted_codetable[x]["support"] == 0])}')
-                    for x in aux_converted_codetable:
-                        if aux_converted_codetable[x]["support"] == 0:
-                            print(f'code with support 0: {aux_converted_codetable[x]}')
+#                    for x in aux_converted_codetable:
+#                        if aux_converted_codetable[x]["support"] == 0:
+#                            print(f'code with support 0: {aux_converted_codetable[x]}')
                     aux_codetable_sco = ct.codetable_in_standard_cover_order(aux_converted_codetable)
                     ct.calculate_codetable_usage(aux_dat_database, aux_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
                     print(f'num codes with usage 0: {len([x for x in aux_codetable_sco if aux_codetable_sco[x]["usage"] == 0])}')
