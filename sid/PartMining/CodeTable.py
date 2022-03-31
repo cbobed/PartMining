@@ -39,7 +39,7 @@ import psutil as ps
 
 import logging
 
-NUMBER_OF_PROCESSORS=ps.cpu_count(logical=True)
+NUMBER_OF_PROCESSORS=4
 # From Visualizing Notebook ... the horror, don't try this at home ...
 
 ## method to read for the Vreeken's codetable format
@@ -278,10 +278,10 @@ def calculate_transaction_usage (database, codetable):
                 result[current_code] += 1
                 remaining_item_set.difference_update(codetable[current_code]['code_set'])
             current_code += 1
-        if len(remaining_item_set) != 0:
-            print(f'non-covered{remaining_item_set}')
-            print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
-            print('This codetable is not covering properly the database ... is the SCT added?')
+        #if len(remaining_item_set) != 0:
+        #    print(f'non-covered{remaining_item_set}')
+        #    print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
+        #    print('This codetable is not covering properly the database ... is the SCT added?')
     return result
 
 
@@ -301,10 +301,10 @@ def calculate_transaction_usage_from_file (filename, codetable):
                     result[current_code] += 1
                     remaining_item_set.difference_update(codetable[current_code]['code_set'])
                 current_code += 1
-            if len(remaining_item_set) != 0:
-                print(f'non-covered{remaining_item_set}')
-                print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
-                print('This codetable is not covering properly the database ... is the SCT added?')
+            #if len(remaining_item_set) != 0:
+            #    print(f'non-covered{remaining_item_set}')
+            #    print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
+            #    print('This codetable is not covering properly the database ... is the SCT added?')
     return result
 
 def calculate_codetable_usage(database, codetable, parallel=False, use_file_splitting=False, reuse_files=False, num_processors=NUMBER_OF_PROCESSORS):
@@ -327,10 +327,10 @@ def calculate_codetable_usage(database, codetable, parallel=False, use_file_spli
                     remaining_item_set = remaining_item_set - codetable[current_code]['code_set']
                 current_code += 1
 
-            if len(remaining_item_set) != 0:
-                print(f'non-covered{remaining_item_set}')
-                print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
-                print('This codetable is not covering properly the database ... is the SCT added?')
+            #if len(remaining_item_set) != 0:
+            #    print(f'non-covered{remaining_item_set}')
+            #    print(f'singletons: {[codetable[idx]["code"] for idx in codetable if len(codetable[idx]["code"]) == 1]}')
+            #    print('This codetable is not covering properly the database ... is the SCT added?')
     else:
         # pool = mp.get_context("spawn").Pool(ps.cpu_count(logical=False))
         pool = mp.Pool(num_processors)
@@ -703,9 +703,9 @@ def merge_codetables_naive_plus(codetables_info, database):
                                        reuse_files=False)
         print(f'num codes: {len(current_ct["codetable"])}')
         print(f'num codes with support 0: {len([x for x in current_ct["codetable"] if current_ct["codetable"][x]["support"] == 0])}')
-        for x in current_ct["codetable"] :
-            if current_ct["codetable"] [x]["support"] == 0:
-                print(f'code with support 0: {current_ct["codetable"] [x]}')
+        #for x in current_ct["codetable"] :
+        #    if current_ct["codetable"] [x]["support"] == 0:
+        #        print(f'code with support 0: {current_ct["codetable"] [x]}')
         aux_codetable_sco = codetable_in_standard_cover_order(current_ct["codetable"])
         calculate_codetable_usage(database, aux_codetable_sco, True, True,
                                      reuse_files=True)
