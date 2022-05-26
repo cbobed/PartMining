@@ -1,5 +1,5 @@
 #===============================================================
-# File: completePipelineWSLFromDat.sh
+# File: completePipelineWSLFromDatModifiedSlim.sh
 # Author: Carlos Bobed
 # Date: Sept 2021
 # Comments: script for bash command line to launch the 
@@ -35,7 +35,7 @@ CLUSTERING=$2
 GRANULARITY=transaction
 NUM_CLUSTERS=$3
 # set NORMALIZE to -normalize if we want to normalize the vectors
-NORMALIZE=-normalize
+NORMALIZE=
 PRUNING_THRESHOLD=0
 
 # configuration of the third script
@@ -59,14 +59,19 @@ cd $PYTHON_PROJECT_PATH
 ./calculateEntropy.sh $1
 
 
-if [[ $CLUSTERING != "random" ]]; then 
-	echo "calculate vectors ..." > "$TIME_FILE"
-	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
-fi
+#if [[ $CLUSTERING != "random" ]]; then 
+#	echo "calculate vectors ..." > "$TIME_FILE"
+#	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
+#fi
+
+echo vectors already calculated previously ... 
 
 # we should now have database_name+'_DIMENSION_WIN_EPOCHS_sg.vect' as name of the model
 MODEL_FILE="$1"_"$DIMENSION"_"$WIN_SIZE"_"$EPOCHS"_sg.vect
 echo $MODEL_FILE
+
+echo "split database ... " >> "$TIME_FILE"
+{ time ./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 # depending on the granularity we can have different names
 
@@ -93,15 +98,6 @@ fi
 
 SPLITTED_BASENAME="$DB_BASENAME"_"$GRANULARITY"_"$CLUSTERING"_"$DIMENSION"d_k"$NUM_CLUSTERS"_"$NORM_NAME"Norm_"$TRANS_NAME"
 # afterwards  '_' + str(label) + '_k' + str(k) + '.dat' is added 
-
-if [[ $CLUSTERING != "random" ]]; then 
-	echo "split database ... " >> "$TIME_FILE"
-	{ time ./splitDatabase.sh $1 $MODEL_FILE $CLUSTERING $GRANULARITY $NUM_CLUSTERS $NORMALIZE >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
-else 
-	echo "split database shuffling ..." >> "$TIME_FILE"
-	{ time ./splitDatabaseShuf.sh $1 $NUM_CLUSTERS $SPLITTED_BASENAME >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"  
-fi
-
 
 cp "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"* $SLIM_PROJECT_PATH
 cd $SLIM_PROJECT_PATH
@@ -134,7 +130,7 @@ done
 
 # $4 is going to be the initial index 
 echo We have "$ACTUAL_NUM_CLUSTER" clusters
-echo "calculating merged ratio ..." >> "$TIME_FILE"
-{ time ./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $4 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS" >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
+#echo "calculating merged ratio ..." >> "$TIME_FILE"
+#{ time ./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $4 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS" >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 cd "$CURRENT_PATH"
