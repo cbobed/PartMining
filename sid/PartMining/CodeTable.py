@@ -72,14 +72,40 @@ def read_codetable_dat_format (filename):
             if (item_line[-2] == "#SUP:"):
                 usage = 0
                 support = int(item_line[-1])
-                codes[label] = {'code': item_line[:-2], 'usage': int(usage), 'support': int(support)}
+                codes[label] = {'code': item_line[:-2],
+                                'code_int':[int(item) for item in item_line[:-2]],
+                                'code_set':set([int(item) for item in item_line[:-2]]),
+                                'usage': int(usage), 'support': int(support)}
                 label += 1
             elif (item_line[-1].startswith('#SUP:')):
                 usage = 0
                 support = int(item_line[-1].split(':')[1])
-                codes[label] = {'code': item_line[:-1], 'usage': int(usage), 'support': int(support)}
+                codes[label] = {'code': item_line[:-1],
+                                'code_int':[int(item) for item in item_line[:-1]],
+                                'code_set':set([int(item) for item in item_line[:-1]]),
+                                'usage': int(usage), 'support': int(support)}
+                label += 1
+            else:
+                usage = 0
+                support = 0
+                codes[label] = {'code': item_line,
+                                'code_int':[int(item) for item in item_line],
+                                'code_set':set([int(item) for item in item_line]),
+                                'usage': int(usage), 'support': int(support)}
                 label += 1
     return codes
+
+def add_sct (codetable, sct_codetable):
+    max_label = max(codetable.keys()) + 1
+    for label in sct_codetable:
+        aux_set = set()
+        aux_set.add(int(sct_codetable[label]['code']))
+        codetable[max_label] = {'code': [sct_codetable[label]['code']],
+                            'code_int': [int(sct_codetable[label]['code'])],
+                            'code_set': aux_set,
+                            'usage': 0,
+                            'support':0}
+        max_label +=1
 
 
 ## it assumes that it has been already sorted if required (calculate_cover_order)
