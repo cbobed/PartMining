@@ -80,6 +80,7 @@ if __name__ == "__main__":
         ct.calculate_codetable_support(dat_database, converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
         converted_codetable_sco = ct.codetable_in_standard_cover_order(converted_codetable)
         ct.calculate_codetable_usage(dat_database, converted_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
+        print(converted_codetable_sco)
 
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database, False)
