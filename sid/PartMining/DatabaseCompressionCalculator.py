@@ -12,20 +12,20 @@
 ###############################################################################
 
 import math
-    import TransactionDatabase as tdb
-    import CodeTable as ct
-    import argparse
-    import time
-    import logging
-    import os.path
+import TransactionDatabase as tdb
+import CodeTable as ct
+import argparse
+import time
+import logging
+import os.path
 
 
-    if __name__ == "__main__":
-        logging.basicConfig(level=logging.DEBUG)
-        my_parser = argparse.ArgumentParser(allow_abbrev=False)
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    my_parser = argparse.ArgumentParser(allow_abbrev=False)
 
-        my_parser.add_argument('-database_file', action='store', required=True,
-                               help="file of the database (must be the .dat)")
+    my_parser.add_argument('-database_file', action='store', required=True,
+                           help="file of the database (must be the .dat)")
 
     ## argparse does not fully support subgroups, you have to do it with
     ## subparsers ... overkilling, I leave all the parameters in the wild living free
@@ -141,7 +141,7 @@ import math
             print(f'size: {len(c["codetable"])}')
 
         if args.merge_method == 'naive':
-            converted_merged_codetable = ct.merge_codetables_naive(codetables_info)
+            converted_merged_codetable = ct.merge_codetables_naive_converted(codetables_info)
         elif args.merge_method == 'pruning':
             converted_merged_codetable = ct.merge_codetables_pruning(codetables_info, dat_database)
         elif args.merge_method == 'naive_plus':

@@ -68,6 +68,7 @@ if __name__ == "__main__":
 
     if args.merge_method == 'naive':
         converted_merged_codetable = ct.merge_codetables_naive_converted(codetables)
+        converted_merged_codetable = ct.merge_codetables_naive(codetables)
     elif args.merge_method == 'pruning':
         converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
 

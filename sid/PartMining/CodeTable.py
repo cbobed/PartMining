@@ -579,6 +579,23 @@ def merge_codetables_naive_converted(codetables_info):
                 if (next(iter(table_j[code_j_label]['code_set'])) in singletons_i):
                     to_omit[j].add(code_j_label)
         logging.debug(f'omitting {len(to_omit[j])} ... from table {j}')
+=======
+            ## deduplicate i against j
+            for code_i_label in table_i:
+                if not (i in to_omit and code_i_label in to_omit[i]):
+                    for code_j_label in table_j:
+                        if code_j_label not in to_omit[j]:
+                            if 'code_set' in table_i[code_i_label]:
+                                set_i = table_i[code_i_label]['code_set']
+                            else:
+                                set_i = set([int(item) for item in table_i[code_i_label]['code']])
+                            if 'code_set' in table_j[code_j_label]:
+                                set_j = table_j[code_j_label]['code_set']
+                            else:
+                                set_j = set([int(item) for item in table_j[code_j_label]['code']])
+                            if set_i == set_j:
+                                to_omit[j].add(code_j_label)
+>>>>>>> 85c1480d66e2323cd8531c1792ab2d2a8ea7a237
     merged = {}
     non_colision_labelbase = 0
     for i in range(len(codetables_info)):
