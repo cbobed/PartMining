@@ -6,7 +6,9 @@ import time
 import logging
 import os.path
 
-
+def print_formatted(codetable):
+    for label in codetable:
+        print (codetable[label])
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
@@ -59,17 +61,17 @@ if __name__ == "__main__":
         # we create the singleton code table
         sct_codetable = ct.build_SCT(dat_database, False)
         # we extend the loaded_codetable with the sct elements that were not already present
-        print (converted_codetable)
+        print_formatted(converted_codetable)
         print ("-----------------------------------------------")
         ct.add_sct(converted_codetable, sct_codetable)
-        print(converted_codetable)
+        print_formatted(converted_codetable)
         print("-----------------------------------------------")
         ct.calculate_codetable_support(dat_database, converted_codetable, args.parallel, args.split_parallelization, reuse_files=False)
-        print(converted_codetable)
+        print_formatted(converted_codetable)
         print("-----------------------------------------------")
         converted_codetable_sco = ct.codetable_in_standard_cover_order(converted_codetable)
         ct.calculate_codetable_usage(dat_database, converted_codetable_sco, args.parallel, args.split_parallelization, reuse_files=True)
-        print(converted_codetable_sco)
+        print_formatted(converted_codetable_sco)
         print("-----------------------------------------------")
         ct_compressed_size = ct.calculate_complete_size(converted_codetable_sco, sct_codetable)
         sct_compressed_size = ct.calculate_complete_size_sct(sct_codetable)

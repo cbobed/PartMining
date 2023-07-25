@@ -13,6 +13,15 @@ import argparse
 import time
 import logging
 
+def is_len_ordered(table):
+    for i in range(len(table)-1):
+        if (len(table[i]["code_set"]) > 1):
+            print(f'{len(table[i]["code_set"])} {len(table[i+1]["code_set"])}')
+        if (len(table[i]['code_set'])<len(table[i+1]['code_set'])):
+            return False
+    return True
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
@@ -45,7 +54,12 @@ if __name__ == "__main__":
         aux_db_dat_table, aux_dat_db_table = tdb.read_analysis_table_bidir(current_name + '.db.analysis.txt')
         aux_codetable = ct.read_codetable(current_name+'.ct', True)
         aux_converted_codetable = ct.convert_int_codetable(aux_codetable, aux_db_dat_table)
-        codetables.append({'codetable': aux_converted_codetable})
+        singleton_set = set()
+        for x in [code for code in aux_converted_codetable if len(aux_converted_codetable[code]['code_set']) == 1]:
+            singleton_set.update(aux_converted_codetable[x]['code_set'])
+        print(f'singleton size: {len(singleton_set)}')
+        codetables.append({'codetable': aux_converted_codetable, 'singletons':singleton_set})
+        print(f'is_ordered {is_len_ordered(aux_converted_codetable)}')
 
     # dat_database = tdb.read_database_dat(args.database_file)
     print(f'number of codetables: {len(codetables)}')
@@ -53,7 +67,7 @@ if __name__ == "__main__":
         print(f'size: {len(c["codetable"])}')
 
     if args.merge_method == 'naive':
-        converted_merged_codetable = ct.merge_codetables_naive(codetables)
+        converted_merged_codetable = ct.merge_codetables_naive_converted(codetables)
     elif args.merge_method == 'pruning':
         converted_merged_codetable = ct.merge_codetables_pruning(codetables, dat_database)
 

@@ -1,0 +1,11 @@
+-- MERGING METHOD naive
+merged table size without non-used codes: 1474
+merged ratio: 0.2444874368171911
+-- MERGING METHOD naive_plus
+merged table size without non-used codes: 409
+merged ratio: 0.4408093460585105
+-- MERGING METHOD informed
+merged table size without non-used codes: 1474
+merged ratio: 0.2444874368171911
+3
+0

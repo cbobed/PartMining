@@ -1,0 +1,1249 @@
+
+-- MERGING METHOD naive
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__0_k16...
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes: 209
+num codes with support 0: 0
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes with usage 0: 29
+database_size: 27878.636317745735
+codetable_size: 5064.236925993004
+complete: 32942.87324373874
+database_size: 189675.40562590217
+codetable_size: 529.195203137847
+complete: 190204.60082904002
+Partition 0 ratio: 0.17319703677067463
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__1_k16...
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes: 202
+num codes with support 0: 0
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes with usage 0: 46
+database_size: 20327.622168954204
+codetable_size: 3701.3265247028758
+complete: 24028.94869365708
+database_size: 123216.96556708422
+codetable_size: 468.08331046742734
+complete: 123685.04887755164
+Partition 1 ratio: 0.19427528963056617
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__2_k16...
+chunks ... [0, 271, 542, 813, 1086]
+num codes: 162
+num codes with support 0: 0
+chunks ... [0, 271, 542, 813, 1086]
+num codes with usage 0: 31
+database_size: 11845.32661922659
+codetable_size: 2657.3497505554697
+complete: 14502.676369782059
+database_size: 51255.43536320176
+codetable_size: 453.0466540813992
+complete: 51708.48201728316
+Partition 2 ratio: 0.2804699694130385
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__3_k16...
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes: 320
+num codes with support 0: 0
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes with usage 0: 25
+database_size: 49832.76104719093
+codetable_size: 8865.156963836684
+complete: 58697.918011027614
+database_size: 278342.21860283054
+codetable_size: 590.2842813127776
+complete: 278932.5028841433
+Partition 3 ratio: 0.21043771308146267
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__4_k16...
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes: 183
+num codes with support 0: 0
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes with usage 0: 21
+database_size: 25746.0084911782
+codetable_size: 4929.05896371397
+complete: 30675.06745489217
+database_size: 167716.45796314967
+codetable_size: 465.287962125896
+complete: 168181.74592527558
+Partition 4 ratio: 0.18239237133690678
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__5_k16...
+chunks ... [0, 136, 272, 408, 544]
+num codes: 122
+num codes with support 0: 0
+chunks ... [0, 136, 272, 408, 544]
+num codes with usage 0: 30
+database_size: 5056.420561369348
+codetable_size: 1855.9377590309646
+complete: 6912.3583204003135
+database_size: 25094.761479402914
+codetable_size: 415.46601283364885
+complete: 25510.22749223656
+Partition 5 ratio: 0.27096419749702066
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__6_k16...
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes: 275
+num codes with support 0: 0
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes with usage 0: 40
+database_size: 35803.66020712324
+codetable_size: 6929.272800963214
+complete: 42732.93300808645
+database_size: 184332.94418003672
+codetable_size: 571.9600675484744
+complete: 184904.9042475852
+Partition 6 ratio: 0.23110762357534675
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__7_k16...
+chunks ... [0, 84, 168, 252, 338]
+num codes: 124
+num codes with support 0: 0
+chunks ... [0, 84, 168, 252, 338]
+num codes with usage 0: 26
+database_size: 4943.12847894058
+codetable_size: 1764.5818691269744
+complete: 6707.710348067554
+database_size: 16745.30633526778
+codetable_size: 374.83023438768544
+complete: 17120.136569655464
+Partition 7 ratio: 0.39180238549946006
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__8_k16...
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes: 188
+num codes with support 0: 0
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes with usage 0: 29
+database_size: 20901.923372062018
+codetable_size: 3866.9062535156163
+complete: 24768.829625577633
+database_size: 129885.32443074339
+codetable_size: 490.0979074343097
+complete: 130375.4223381777
+Partition 8 ratio: 0.18998081986135668
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__9_k16...
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes: 324
+num codes with support 0: 0
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes with usage 0: 41
+database_size: 59081.997978514555
+codetable_size: 8375.279980367859
+complete: 67457.27795888242
+database_size: 291013.11401845515
+codetable_size: 605.6569122717639
+complete: 291618.7709307269
+Partition 9 ratio: 0.2313200818437942
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__10_k16...
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes: 272
+num codes with support 0: 0
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes with usage 0: 32
+database_size: 46034.052136573024
+codetable_size: 7406.812335458307
+complete: 53440.86447203133
+database_size: 280299.2388945273
+codetable_size: 619.96253479287
+complete: 280919.2014293202
+Partition 10 ratio: 0.1902357126181606
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__11_k16...
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes: 154
+num codes with support 0: 0
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes with usage 0: 29
+database_size: 20657.491630129
+codetable_size: 3877.844882316457
+complete: 24535.336512445458
+database_size: 191491.7501092937
+codetable_size: 426.49192172754437
+complete: 191918.24203102125
+Partition 11 ratio: 0.12784264931146888
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__12_k16...
+chunks ... [0, 234, 468, 702, 938]
+num codes: 179
+num codes with support 0: 0
+chunks ... [0, 234, 468, 702, 938]
+num codes with usage 0: 36
+database_size: 10890.236917476881
+codetable_size: 3016.8705505671805
+complete: 13907.107468044062
+database_size: 44909.14282729051
+codetable_size: 503.3909620364789
+complete: 45412.53378932699
+Partition 12 ratio: 0.30623940810174655
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__13_k16...
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes: 213
+num codes with support 0: 0
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes with usage 0: 30
+database_size: 22001.609372339717
+codetable_size: 4757.678392822044
+complete: 26759.28776516176
+database_size: 119916.0529664977
+codetable_size: 612.1670497257621
+complete: 120528.22001622345
+Partition 13 ratio: 0.22201678380017462
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__14_k16...
+chunks ... [0, 491, 982, 1473, 1964]
+num codes: 157
+num codes with support 0: 0
+chunks ... [0, 491, 982, 1473, 1964]
+num codes with usage 0: 30
+database_size: 14457.896834749887
+codetable_size: 3267.538431495966
+complete: 17725.43526624585
+database_size: 92038.32676551907
+codetable_size: 494.3038476678402
+complete: 92532.6306131869
+Partition 14 ratio: 0.19155875228862004
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__15_k16...
+chunks ... [0, 492, 984, 1476, 1968]
+num codes: 151
+num codes with support 0: 0
+chunks ... [0, 492, 984, 1476, 1968]
+num codes with usage 0: 28
+database_size: 12507.900277106753
+codetable_size: 3129.065583559997
+complete: 15636.96586066675
+database_size: 88575.77580468506
+codetable_size: 439.3169243737643
+complete: 89015.09272905883
+Partition 15 ratio: 0.17566645589262067
+number of codetables: 16
+size: 209
+size: 202
+size: 162
+size: 320
+size: 183
+size: 122
+size: 275
+size: 124
+size: 188
+size: 324
+size: 272
+size: 154
+size: 179
+size: 213
+size: 157
+size: 151
+merged table size: 1904
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+merged table size without non-used codes: 1759
+database_size: 569504.60849291
+codetable_size: 65867.16643862083
+complete: 635371.7749315309
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+merged size: 635371.7749315309
+sct size: 2475021.631279518
+merged ratio: 0.25671362500499084
+time elapsed: 16.45037341117859
+-- MERGING METHOD naive_plus
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__0_k16...
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes: 209
+num codes with support 0: 0
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes with usage 0: 29
+database_size: 27878.636317745735
+codetable_size: 5064.236925993004
+complete: 32942.87324373874
+database_size: 189675.40562590217
+codetable_size: 529.195203137847
+complete: 190204.60082904002
+Partition 0 ratio: 0.17319703677067463
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__1_k16...
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes: 202
+num codes with support 0: 0
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes with usage 0: 46
+database_size: 20327.622168954204
+codetable_size: 3701.3265247028758
+complete: 24028.94869365708
+database_size: 123216.96556708422
+codetable_size: 468.08331046742734
+complete: 123685.04887755164
+Partition 1 ratio: 0.19427528963056617
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__2_k16...
+chunks ... [0, 271, 542, 813, 1086]
+num codes: 162
+num codes with support 0: 0
+chunks ... [0, 271, 542, 813, 1086]
+num codes with usage 0: 31
+database_size: 11845.32661922659
+codetable_size: 2657.3497505554697
+complete: 14502.676369782059
+database_size: 51255.43536320176
+codetable_size: 453.0466540813992
+complete: 51708.48201728316
+Partition 2 ratio: 0.2804699694130385
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__3_k16...
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes: 320
+num codes with support 0: 0
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes with usage 0: 25
+database_size: 49832.76104719093
+codetable_size: 8865.156963836684
+complete: 58697.918011027614
+database_size: 278342.21860283054
+codetable_size: 590.2842813127776
+complete: 278932.5028841433
+Partition 3 ratio: 0.21043771308146267
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__4_k16...
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes: 183
+num codes with support 0: 0
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes with usage 0: 21
+database_size: 25746.0084911782
+codetable_size: 4929.05896371397
+complete: 30675.06745489217
+database_size: 167716.45796314967
+codetable_size: 465.287962125896
+complete: 168181.74592527558
+Partition 4 ratio: 0.18239237133690678
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__5_k16...
+chunks ... [0, 136, 272, 408, 544]
+num codes: 122
+num codes with support 0: 0
+chunks ... [0, 136, 272, 408, 544]
+num codes with usage 0: 30
+database_size: 5056.420561369348
+codetable_size: 1855.9377590309646
+complete: 6912.3583204003135
+database_size: 25094.761479402914
+codetable_size: 415.46601283364885
+complete: 25510.22749223656
+Partition 5 ratio: 0.27096419749702066
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__6_k16...
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes: 275
+num codes with support 0: 0
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes with usage 0: 40
+database_size: 35803.66020712324
+codetable_size: 6929.272800963214
+complete: 42732.93300808645
+database_size: 184332.94418003672
+codetable_size: 571.9600675484744
+complete: 184904.9042475852
+Partition 6 ratio: 0.23110762357534675
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__7_k16...
+chunks ... [0, 84, 168, 252, 338]
+num codes: 124
+num codes with support 0: 0
+chunks ... [0, 84, 168, 252, 338]
+num codes with usage 0: 26
+database_size: 4943.12847894058
+codetable_size: 1764.5818691269744
+complete: 6707.710348067554
+database_size: 16745.30633526778
+codetable_size: 374.83023438768544
+complete: 17120.136569655464
+Partition 7 ratio: 0.39180238549946006
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__8_k16...
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes: 188
+num codes with support 0: 0
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes with usage 0: 29
+database_size: 20901.923372062018
+codetable_size: 3866.9062535156163
+complete: 24768.829625577633
+database_size: 129885.32443074339
+codetable_size: 490.0979074343097
+complete: 130375.4223381777
+Partition 8 ratio: 0.18998081986135668
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__9_k16...
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes: 324
+num codes with support 0: 0
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes with usage 0: 41
+database_size: 59081.997978514555
+codetable_size: 8375.279980367859
+complete: 67457.27795888242
+database_size: 291013.11401845515
+codetable_size: 605.6569122717639
+complete: 291618.7709307269
+Partition 9 ratio: 0.2313200818437942
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__10_k16...
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes: 272
+num codes with support 0: 0
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes with usage 0: 32
+database_size: 46034.052136573024
+codetable_size: 7406.812335458307
+complete: 53440.86447203133
+database_size: 280299.2388945273
+codetable_size: 619.96253479287
+complete: 280919.2014293202
+Partition 10 ratio: 0.1902357126181606
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__11_k16...
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes: 154
+num codes with support 0: 0
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes with usage 0: 29
+database_size: 20657.491630129
+codetable_size: 3877.844882316457
+complete: 24535.336512445458
+database_size: 191491.7501092937
+codetable_size: 426.49192172754437
+complete: 191918.24203102125
+Partition 11 ratio: 0.12784264931146888
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__12_k16...
+chunks ... [0, 234, 468, 702, 938]
+num codes: 179
+num codes with support 0: 0
+chunks ... [0, 234, 468, 702, 938]
+num codes with usage 0: 36
+database_size: 10890.236917476881
+codetable_size: 3016.8705505671805
+complete: 13907.107468044062
+database_size: 44909.14282729051
+codetable_size: 503.3909620364789
+complete: 45412.53378932699
+Partition 12 ratio: 0.30623940810174655
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__13_k16...
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes: 213
+num codes with support 0: 0
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes with usage 0: 30
+database_size: 22001.609372339717
+codetable_size: 4757.678392822044
+complete: 26759.28776516176
+database_size: 119916.0529664977
+codetable_size: 612.1670497257621
+complete: 120528.22001622345
+Partition 13 ratio: 0.22201678380017462
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__14_k16...
+chunks ... [0, 491, 982, 1473, 1964]
+num codes: 157
+num codes with support 0: 0
+chunks ... [0, 491, 982, 1473, 1964]
+num codes with usage 0: 30
+database_size: 14457.896834749887
+codetable_size: 3267.538431495966
+complete: 17725.43526624585
+database_size: 92038.32676551907
+codetable_size: 494.3038476678402
+complete: 92532.6306131869
+Partition 14 ratio: 0.19155875228862004
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__15_k16...
+chunks ... [0, 492, 984, 1476, 1968]
+num codes: 151
+num codes with support 0: 0
+chunks ... [0, 492, 984, 1476, 1968]
+num codes with usage 0: 28
+database_size: 12507.900277106753
+codetable_size: 3129.065583559997
+complete: 15636.96586066675
+database_size: 88575.77580468506
+codetable_size: 439.3169243737643
+complete: 89015.09272905883
+Partition 15 ratio: 0.17566645589262067
+number of codetables: 16
+size: 209
+size: 202
+size: 162
+size: 320
+size: 183
+size: 122
+size: 275
+size: 124
+size: 188
+size: 324
+size: 272
+size: 154
+size: 179
+size: 213
+size: 157
+size: 151
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 23, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 87, 88, 89, 90, 92, 93, 94, 96, 97}
+Added 21 singletons
+added:  {10, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 24, 25, 28, 41, 43, 62, 64, 86, 91, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 230
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1858850.0608769308
+codetable_size: 6300.629704230805
+complete: 1865150.6905811615
+Partition ratio: 0.7535896523122224
+current singletons: {1, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 75, 78, 79, 82, 83, 84, 85, 86, 87, 88, 90, 91, 94, 96, 97}
+Added 24 singletons
+added:  {2, 10, 11, 12, 13, 14, 15, 16, 27, 41, 50, 60, 62, 64, 67, 74, 76, 77, 80, 81, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 226
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1550568.6477787066
+codetable_size: 5016.395751232415
+complete: 1555585.0435299391
+Partition ratio: 0.6285137163531554
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 76, 77, 79, 81, 84, 88, 89, 90, 93, 95, 96, 97}
+Added 24 singletons
+added:  {8, 10, 12, 13, 14, 28, 41, 42, 43, 45, 60, 62, 64, 75, 78, 80, 82, 83, 85, 86, 87, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 186
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1970368.8064661068
+codetable_size: 3825.8756301095314
+complete: 1974194.6820962164
+Partition ratio: 0.7976474456409547
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 14, 18, 19, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97}
+Added 12 singletons
+added:  {64, 8, 10, 13, 15, 16, 17, 50, 20, 23, 60, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 332
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1730778.4360938182
+codetable_size: 10676.116801215923
+complete: 1741454.5528950342
+Partition ratio: 0.7036118516648076
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 15, 23, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 62, 63, 65, 66, 68, 69, 70, 71, 74, 75, 78, 79, 81, 82, 83, 84, 86, 87, 88, 90, 92, 94, 96, 97}
+Added 28 singletons
+added:  {10, 12, 14, 16, 17, 18, 19, 20, 21, 22, 24, 27, 31, 41, 50, 60, 64, 67, 72, 73, 76, 77, 80, 85, 89, 91, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 211
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1859631.629129535
+codetable_size: 6286.706780324749
+complete: 1865918.3359098597
+Partition ratio: 0.7538998093302447
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 69, 70, 71, 72, 75, 78, 82, 83, 84, 85, 86, 88, 90, 91, 94, 96, 97}
+Added 28 singletons
+added:  {8, 10, 11, 12, 13, 17, 22, 27, 28, 40, 60, 62, 64, 66, 67, 68, 73, 74, 76, 77, 79, 80, 81, 87, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 150
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1470649.3755423878
+codetable_size: 2911.7525745448556
+complete: 1473561.1281169327
+Partition ratio: 0.5953730300753542
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 92, 93, 94, 96, 97}
+Added 13 singletons
+added:  {64, 67, 40, 41, 73, 43, 11, 8, 12, 10, 91, 62, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 288
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1725142.2882364702
+codetable_size: 8420.612596009705
+complete: 1733562.9008324798
+Partition ratio: 0.7004233332442737
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 46, 49, 50, 51, 52, 53, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 71, 72, 73, 74, 75, 76, 77, 79, 81, 83, 84, 89, 90, 93, 95, 96, 97}
+Added 28 singletons
+added:  {10, 11, 12, 13, 27, 28, 40, 41, 45, 47, 48, 54, 60, 62, 64, 68, 69, 70, 78, 80, 82, 85, 86, 87, 88, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 152
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1870412.7823454584
+codetable_size: 2975.794291359286
+complete: 1873388.5766368178
+Partition ratio: 0.7569180620325842
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 16, 23, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 92, 93, 95, 96, 97}
+Added 25 singletons
+added:  {10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 24, 28, 40, 41, 43, 62, 64, 67, 74, 79, 89, 91, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 213
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1724892.4507018179
+codetable_size: 4942.526047716553
+complete: 1729834.9767495345
+Partition ratio: 0.6989171144557866
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 97}
+Added 9 singletons
+added:  {64, 8, 10, 11, 43, 12, 17, 62, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 333
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1171802.885939812
+codetable_size: 9619.786069097656
+complete: 1181422.6720089098
+Partition ratio: 0.4773383218465638
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97}
+Added 10 singletons
+added:  {41, 10, 43, 11, 12, 15, 16, 25, 28, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 282
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1574561.6988578993
+codetable_size: 8556.002338130536
+complete: 1583117.7011960298
+Partition ratio: 0.639637925256274
+current singletons: {1, 2, 9, 17, 23, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 74, 75, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92, 94, 96, 97}
+Added 34 singletons
+added:  {3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 24, 27, 31, 40, 41, 50, 60, 62, 64, 67, 76, 77, 80, 89, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 188
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1911052.9930564188
+codetable_size: 5222.210499487269
+complete: 1916275.2035559062
+Partition ratio: 0.7742458406576611
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 89, 90, 93, 95, 96, 97}
+Added 18 singletons
+added:  {64, 40, 8, 88, 43, 11, 12, 10, 13, 17, 51, 85, 86, 87, 62, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 197
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1969271.7672556445
+codetable_size: 4427.232526427864
+complete: 1973698.9997820724
+Partition ratio: 0.7974471717088486
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 94, 95, 96, 97}
+Added 9 singletons
+added:  {64, 40, 11, 13, 14, 51, 26, 93, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 222
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1674903.140108604
+codetable_size: 5867.057058681663
+complete: 1680770.1971672857
+Partition ratio: 0.6790931343490416
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 74, 75, 78, 79, 82, 83, 84, 85, 86, 87, 88, 90, 94, 96, 97}
+Added 21 singletons
+added:  {8, 10, 11, 12, 13, 30, 40, 41, 50, 62, 64, 67, 76, 77, 80, 81, 89, 91, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 178
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1465763.9189965897
+codetable_size: 4188.87767046833
+complete: 1469952.796667058
+Partition ratio: 0.5939151311203421
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 75, 78, 81, 82, 83, 85, 88, 90, 91, 94, 96, 97}
+Added 30 singletons
+added:  {10, 11, 12, 13, 14, 15, 17, 27, 28, 31, 41, 46, 60, 62, 64, 71, 72, 73, 74, 76, 77, 79, 80, 84, 86, 87, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 181
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1701543.5158241026
+codetable_size: 4274.26706106685
+complete: 1705817.7828851694
+Partition ratio: 0.6892132825535382
+merged table size: 333
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+merged table size without non-used codes: 321
+database_size: 1171802.885939812
+codetable_size: 9619.786069097656
+complete: 1181422.6720089098
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+merged size: 1181422.6720089098
+sct size: 2475021.631279518
+merged ratio: 0.4773383218465638
+time elapsed: 39.59138035774231
+-- MERGING METHOD informed
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__0_k16...
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes: 209
+num codes with support 0: 0
+chunks ... [0, 1055, 2110, 3165, 4223]
+num codes with usage 0: 29
+database_size: 27878.636317745735
+codetable_size: 5064.236925993004
+complete: 32942.87324373874
+database_size: 189675.40562590217
+codetable_size: 529.195203137847
+complete: 190204.60082904002
+Partition 0 ratio: 0.17319703677067463
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__1_k16...
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes: 202
+num codes with support 0: 0
+chunks ... [0, 662, 1324, 1986, 2649]
+num codes with usage 0: 46
+database_size: 20327.622168954204
+codetable_size: 3701.3265247028758
+complete: 24028.94869365708
+database_size: 123216.96556708422
+codetable_size: 468.08331046742734
+complete: 123685.04887755164
+Partition 1 ratio: 0.19427528963056617
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__2_k16...
+chunks ... [0, 271, 542, 813, 1086]
+num codes: 162
+num codes with support 0: 0
+chunks ... [0, 271, 542, 813, 1086]
+num codes with usage 0: 31
+database_size: 11845.32661922659
+codetable_size: 2657.3497505554697
+complete: 14502.676369782059
+database_size: 51255.43536320176
+codetable_size: 453.0466540813992
+complete: 51708.48201728316
+Partition 2 ratio: 0.2804699694130385
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__3_k16...
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes: 320
+num codes with support 0: 0
+chunks ... [0, 1472, 2944, 4416, 5891]
+num codes with usage 0: 25
+database_size: 49832.76104719093
+codetable_size: 8865.156963836684
+complete: 58697.918011027614
+database_size: 278342.21860283054
+codetable_size: 590.2842813127776
+complete: 278932.5028841433
+Partition 3 ratio: 0.21043771308146267
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__4_k16...
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes: 183
+num codes with support 0: 0
+chunks ... [0, 910, 1820, 2730, 3641]
+num codes with usage 0: 21
+database_size: 25746.0084911782
+codetable_size: 4929.05896371397
+complete: 30675.06745489217
+database_size: 167716.45796314967
+codetable_size: 465.287962125896
+complete: 168181.74592527558
+Partition 4 ratio: 0.18239237133690678
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__5_k16...
+chunks ... [0, 136, 272, 408, 544]
+num codes: 122
+num codes with support 0: 0
+chunks ... [0, 136, 272, 408, 544]
+num codes with usage 0: 30
+database_size: 5056.420561369348
+codetable_size: 1855.9377590309646
+complete: 6912.3583204003135
+database_size: 25094.761479402914
+codetable_size: 415.46601283364885
+complete: 25510.22749223656
+Partition 5 ratio: 0.27096419749702066
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__6_k16...
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes: 275
+num codes with support 0: 0
+chunks ... [0, 968, 1936, 2904, 3875]
+num codes with usage 0: 40
+database_size: 35803.66020712324
+codetable_size: 6929.272800963214
+complete: 42732.93300808645
+database_size: 184332.94418003672
+codetable_size: 571.9600675484744
+complete: 184904.9042475852
+Partition 6 ratio: 0.23110762357534675
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__7_k16...
+chunks ... [0, 84, 168, 252, 338]
+num codes: 124
+num codes with support 0: 0
+chunks ... [0, 84, 168, 252, 338]
+num codes with usage 0: 26
+database_size: 4943.12847894058
+codetable_size: 1764.5818691269744
+complete: 6707.710348067554
+database_size: 16745.30633526778
+codetable_size: 374.83023438768544
+complete: 17120.136569655464
+Partition 7 ratio: 0.39180238549946006
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__8_k16...
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes: 188
+num codes with support 0: 0
+chunks ... [0, 721, 1442, 2163, 2884]
+num codes with usage 0: 29
+database_size: 20901.923372062018
+codetable_size: 3866.9062535156163
+complete: 24768.829625577633
+database_size: 129885.32443074339
+codetable_size: 490.0979074343097
+complete: 130375.4223381777
+Partition 8 ratio: 0.18998081986135668
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__9_k16...
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes: 324
+num codes with support 0: 0
+chunks ... [0, 1504, 3008, 4512, 6016]
+num codes with usage 0: 41
+database_size: 59081.997978514555
+codetable_size: 8375.279980367859
+complete: 67457.27795888242
+database_size: 291013.11401845515
+codetable_size: 605.6569122717639
+complete: 291618.7709307269
+Partition 9 ratio: 0.2313200818437942
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__10_k16...
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes: 272
+num codes with support 0: 0
+chunks ... [0, 1500, 3000, 4500, 6002]
+num codes with usage 0: 32
+database_size: 46034.052136573024
+codetable_size: 7406.812335458307
+complete: 53440.86447203133
+database_size: 280299.2388945273
+codetable_size: 619.96253479287
+complete: 280919.2014293202
+Partition 10 ratio: 0.1902357126181606
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__11_k16...
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes: 154
+num codes with support 0: 0
+chunks ... [0, 1066, 2132, 3198, 4266]
+num codes with usage 0: 29
+database_size: 20657.491630129
+codetable_size: 3877.844882316457
+complete: 24535.336512445458
+database_size: 191491.7501092937
+codetable_size: 426.49192172754437
+complete: 191918.24203102125
+Partition 11 ratio: 0.12784264931146888
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__12_k16...
+chunks ... [0, 234, 468, 702, 938]
+num codes: 179
+num codes with support 0: 0
+chunks ... [0, 234, 468, 702, 938]
+num codes with usage 0: 36
+database_size: 10890.236917476881
+codetable_size: 3016.8705505671805
+complete: 13907.107468044062
+database_size: 44909.14282729051
+codetable_size: 503.3909620364789
+complete: 45412.53378932699
+Partition 12 ratio: 0.30623940810174655
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__13_k16...
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes: 213
+num codes with support 0: 0
+chunks ... [0, 639, 1278, 1917, 2556]
+num codes with usage 0: 30
+database_size: 22001.609372339717
+codetable_size: 4757.678392822044
+complete: 26759.28776516176
+database_size: 119916.0529664977
+codetable_size: 612.1670497257621
+complete: 120528.22001622345
+Partition 13 ratio: 0.22201678380017462
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__14_k16...
+chunks ... [0, 491, 982, 1473, 1964]
+num codes: 157
+num codes with support 0: 0
+chunks ... [0, 491, 982, 1473, 1964]
+num codes with usage 0: 30
+database_size: 14457.896834749887
+codetable_size: 3267.538431495966
+complete: 17725.43526624585
+database_size: 92038.32676551907
+codetable_size: 494.3038476678402
+complete: 92532.6306131869
+Partition 14 ratio: 0.19155875228862004
+processing tkmeans_batch_results/k16/batch-1/adult_tkmeans__15_k16...
+chunks ... [0, 492, 984, 1476, 1968]
+num codes: 151
+num codes with support 0: 0
+chunks ... [0, 492, 984, 1476, 1968]
+num codes with usage 0: 28
+database_size: 12507.900277106753
+codetable_size: 3129.065583559997
+complete: 15636.96586066675
+database_size: 88575.77580468506
+codetable_size: 439.3169243737643
+complete: 89015.09272905883
+Partition 15 ratio: 0.17566645589262067
+number of codetables: 16
+size: 209
+size: 202
+size: 162
+size: 320
+size: 183
+size: 122
+size: 275
+size: 124
+size: 188
+size: 324
+size: 272
+size: 154
+size: 179
+size: 213
+size: 157
+size: 151
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 23, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 87, 88, 89, 90, 92, 93, 94, 96, 97}
+Added 21 singletons
+added:  {10, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 24, 25, 28, 41, 43, 62, 64, 86, 91, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 230
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1858850.0608769308
+codetable_size: 6300.629704230805
+complete: 1865150.6905811615
+Partition ratio: 0.7535896523122224
+current singletons: {1, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 75, 78, 79, 82, 83, 84, 85, 86, 87, 88, 90, 91, 94, 96, 97}
+Added 24 singletons
+added:  {2, 10, 11, 12, 13, 14, 15, 16, 27, 41, 50, 60, 62, 64, 67, 74, 76, 77, 80, 81, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 226
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1550568.6477787066
+codetable_size: 5016.395751232415
+complete: 1555585.0435299391
+Partition ratio: 0.6285137163531554
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 76, 77, 79, 81, 84, 88, 89, 90, 93, 95, 96, 97}
+Added 24 singletons
+added:  {8, 10, 12, 13, 14, 28, 41, 42, 43, 45, 60, 62, 64, 75, 78, 80, 82, 83, 85, 86, 87, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 186
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1970368.8064661068
+codetable_size: 3825.8756301095314
+complete: 1974194.6820962164
+Partition ratio: 0.7976474456409547
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 14, 18, 19, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97}
+Added 12 singletons
+added:  {64, 8, 10, 13, 15, 16, 17, 50, 20, 23, 60, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 332
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1730778.4360938182
+codetable_size: 10676.116801215923
+complete: 1741454.5528950342
+Partition ratio: 0.7036118516648076
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 15, 23, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 62, 63, 65, 66, 68, 69, 70, 71, 74, 75, 78, 79, 81, 82, 83, 84, 86, 87, 88, 90, 92, 94, 96, 97}
+Added 28 singletons
+added:  {10, 12, 14, 16, 17, 18, 19, 20, 21, 22, 24, 27, 31, 41, 50, 60, 64, 67, 72, 73, 76, 77, 80, 85, 89, 91, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 211
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1859631.629129535
+codetable_size: 6286.706780324749
+complete: 1865918.3359098597
+Partition ratio: 0.7538998093302447
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 69, 70, 71, 72, 75, 78, 82, 83, 84, 85, 86, 88, 90, 91, 94, 96, 97}
+Added 28 singletons
+added:  {8, 10, 11, 12, 13, 17, 22, 27, 28, 40, 60, 62, 64, 66, 67, 68, 73, 74, 76, 77, 79, 80, 81, 87, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 150
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1470649.3755423878
+codetable_size: 2911.7525745448556
+complete: 1473561.1281169327
+Partition ratio: 0.5953730300753542
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 92, 93, 94, 96, 97}
+Added 13 singletons
+added:  {64, 67, 40, 41, 73, 43, 11, 8, 12, 10, 91, 62, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 288
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1725142.2882364702
+codetable_size: 8420.612596009705
+complete: 1733562.9008324798
+Partition ratio: 0.7004233332442737
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 46, 49, 50, 51, 52, 53, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 71, 72, 73, 74, 75, 76, 77, 79, 81, 83, 84, 89, 90, 93, 95, 96, 97}
+Added 28 singletons
+added:  {10, 11, 12, 13, 27, 28, 40, 41, 45, 47, 48, 54, 60, 62, 64, 68, 69, 70, 78, 80, 82, 85, 86, 87, 88, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 152
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1870412.7823454584
+codetable_size: 2975.794291359286
+complete: 1873388.5766368178
+Partition ratio: 0.7569180620325842
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 16, 23, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 80, 81, 82, 83, 84, 85, 86, 87, 88, 90, 92, 93, 95, 96, 97}
+Added 25 singletons
+added:  {10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 24, 28, 40, 41, 43, 62, 64, 67, 74, 79, 89, 91, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 213
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1724892.4507018179
+codetable_size: 4942.526047716553
+complete: 1729834.9767495345
+Partition ratio: 0.6989171144557866
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 97}
+Added 9 singletons
+added:  {64, 8, 10, 11, 43, 12, 17, 62, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 333
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1171802.885939812
+codetable_size: 9619.786069097656
+complete: 1181422.6720089098
+Partition ratio: 0.4773383218465638
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97}
+Added 10 singletons
+added:  {41, 10, 43, 11, 12, 15, 16, 25, 28, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 282
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1574561.6988578993
+codetable_size: 8556.002338130536
+complete: 1583117.7011960298
+Partition ratio: 0.639637925256274
+current singletons: {1, 2, 9, 17, 23, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 74, 75, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88, 90, 91, 92, 94, 96, 97}
+Added 34 singletons
+added:  {3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 24, 27, 31, 40, 41, 50, 60, 62, 64, 67, 76, 77, 80, 89, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 188
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1911052.9930564188
+codetable_size: 5222.210499487269
+complete: 1916275.2035559062
+Partition ratio: 0.7742458406576611
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 89, 90, 93, 95, 96, 97}
+Added 18 singletons
+added:  {64, 40, 8, 88, 43, 11, 12, 10, 13, 17, 51, 85, 86, 87, 62, 91, 92, 94}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 197
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1969271.7672556445
+codetable_size: 4427.232526427864
+complete: 1973698.9997820724
+Partition ratio: 0.7974471717088486
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 94, 95, 96, 97}
+Added 9 singletons
+added:  {64, 40, 11, 13, 14, 51, 26, 93, 62}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 222
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1674903.140108604
+codetable_size: 5867.057058681663
+complete: 1680770.1971672857
+Partition ratio: 0.6790931343490416
+current singletons: {1, 2, 3, 4, 5, 6, 7, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 68, 69, 70, 71, 72, 73, 74, 75, 78, 79, 82, 83, 84, 85, 86, 87, 88, 90, 94, 96, 97}
+Added 21 singletons
+added:  {8, 10, 11, 12, 13, 30, 40, 41, 50, 62, 64, 67, 76, 77, 80, 81, 89, 91, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 178
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1465763.9189965897
+codetable_size: 4188.87767046833
+complete: 1469952.796667058
+Partition ratio: 0.5939151311203421
+current singletons: {1, 2, 3, 4, 5, 6, 7, 8, 9, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 63, 65, 66, 67, 68, 69, 70, 75, 78, 81, 82, 83, 85, 88, 90, 91, 94, 96, 97}
+Added 30 singletons
+added:  {10, 11, 12, 13, 14, 15, 17, 27, 28, 31, 41, 46, 60, 62, 64, 71, 72, 73, 74, 76, 77, 79, 80, 84, 86, 87, 89, 92, 93, 95}
+chunks ... [0, 12210, 24420, 36630, 48842]
+num codes: 181
+num codes with support 0: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1701543.5158241026
+codetable_size: 4274.26706106685
+complete: 1705817.7828851694
+Partition ratio: 0.6892132825535382
+initial ratio: 0.4773383218465638
+merged: {9}
+merged: {9}
+to_process: {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15}
+[(0, 0.39291170326651836), (1, 0.17653318289968617), (2, 0.13170504885226128), (3, 0.3809031159604763), (4, 0.2744201880441219), (5, 0.04284881655845353), (6, 0.3434240005973265), (7, 0.03451836303725909), (8, 0.25755751689934453), (10, 0.40048990254807953), (11, 0.30339979636535974), (12, 0.10729889981942077), (13, 0.22439679422398726), (14, 0.1490736909863218), (15, 0.15789716551878452)]
+next_candidate: 7
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 1069887.1039633474
+codetable_size: 11259.516231256091
+complete: 1081146.6201946035
+current_ratio: 0.4773383218465638 --- candidate_ratio:0.4368230994553694
+!!!!! ********* merge accepted ... 
+merged: {9, 7}
+to_process: {0, 1, 2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 14, 15}
+[(0, 0.3828136811543708), (1, 0.17966434374177687), (2, 0.12596498416791943), (3, 0.3795038619277482), (4, 0.2756154937360167), (5, 0.04542911784603333), (6, 0.3330794978741134), (8, 0.2492353713450408), (10, 0.39798927959656644), (11, 0.30525955922562414), (12, 0.10537061867826025), (13, 0.21917285710947296), (14, 0.14952074441091198), (15, 0.15872201257546376)]
+next_candidate: 5
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 898645.5299353696
+codetable_size: 12648.728491914191
+complete: 911294.2584272838
+current_ratio: 0.4368230994553694 --- candidate_ratio:0.3681964823702045
+!!!!! ********* merge accepted ... 
+merged: {9, 5, 7}
+to_process: {0, 1, 2, 3, 4, 6, 8, 10, 11, 12, 13, 14, 15}
+[(0, 0.36620844960026716), (1, 0.18272877646816457), (2, 0.11646618189217017), (3, 0.37304336115281517), (4, 0.2786774847414343), (6, 0.3168793218441812), (8, 0.24531975760065916), (10, 0.3899706536238179), (11, 0.30652623441495086), (12, 0.10134486224835382), (13, 0.2116050224015434), (14, 0.1469346561722884), (15, 0.16401090692863812)]
+next_candidate: 12
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 883160.3651664591
+codetable_size: 15730.292112464838
+complete: 898890.6572789239
+current_ratio: 0.3681964823702045 --- candidate_ratio:0.3631849701508355
+!!!!! ********* merge accepted ... 
+merged: {9, 12, 5, 7}
+to_process: {0, 1, 2, 3, 4, 6, 8, 10, 11, 13, 14, 15}
+[(0, 0.3274507387170673), (1, 0.16867496752495445), (2, 0.10321178421614498), (3, 0.36621226225605863), (4, 0.2620862341458412), (6, 0.28505968912349283), (8, 0.21851715897952081), (10, 0.35199449005902284), (11, 0.2859941768611611), (13, 0.19867425039648964), (14, 0.1350987176203468), (15, 0.15092274276274342)]
+next_candidate: 2
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 884666.8556959332
+codetable_size: 18338.695894892724
+complete: 903005.5515908259
+current_ratio: 0.3631849701508355 --- candidate_ratio:0.36484753918049473
+!!!!! ********* merge rejected ... 
+merged: {9, 12, 5, 7}
+to_process: {0, 1, 3, 4, 6, 8, 10, 11, 13, 14, 15}
+[(0, 0.3274507387170673), (1, 0.16867496752495445), (3, 0.36621226225605863), (4, 0.2620862341458412), (6, 0.28505968912349283), (8, 0.21851715897952081), (10, 0.35199449005902284), (11, 0.2859941768611611), (13, 0.19867425039648964), (14, 0.1350987176203468), (15, 0.15092274276274342)]
+next_candidate: 14
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 790512.0660339026
+codetable_size: 18145.950915354366
+complete: 808658.016949257
+current_ratio: 0.3631849701508355 --- candidate_ratio:0.3267276563280795
+!!!!! ********* merge accepted ... 
+merged: {5, 7, 9, 12, 14}
+to_process: {0, 1, 3, 4, 6, 8, 10, 11, 13, 15}
+[(0, 0.2787028631683423), (1, 0.15406721110594343), (3, 0.3415095374600218), (4, 0.25311252581233545), (6, 0.24556909579373923), (8, 0.18486438758227305), (10, 0.31577056992937047), (11, 0.28161799599855153), (13, 0.16516445941120933), (15, 0.13057729201296325)]
+next_candidate: 15
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 785528.0167761828
+codetable_size: 20833.031964491176
+complete: 806361.0487406739
+current_ratio: 0.3267276563280795 --- candidate_ratio:0.32579959647617607
+!!!!! ********* merge accepted ... 
+merged: {5, 7, 9, 12, 14, 15}
+to_process: {0, 1, 3, 4, 6, 8, 10, 11, 13}
+[(0, 0.23714852871864445), (1, 0.13193902201455418), (3, 0.31883122187961527), (4, 0.21997280298004734), (6, 0.20608285593941136), (8, 0.1629120975371313), (10, 0.28106436604013996), (11, 0.25736033688841176), (13, 0.13790310615422388)]
+next_candidate: 1
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 764839.688743485
+codetable_size: 24320.459866006666
+complete: 789160.1486094916
+current_ratio: 0.32579959647617607 --- candidate_ratio:0.31884979857792906
+!!!!! ********* merge accepted ... 
+merged: {1, 5, 7, 9, 12, 14, 15}
+to_process: {0, 3, 4, 6, 8, 10, 11, 13}
+[(0, 0.19506082168165048), (3, 0.2759446437847547), (4, 0.18066936778667556), (6, 0.17282822959441407), (8, 0.13350313371617037), (10, 0.24066742292714827), (11, 0.22337992516295796), (13, 0.11705780117885096)]
+next_candidate: 13
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 744927.9066620962
+codetable_size: 28527.852565772573
+complete: 773455.7592278688
+current_ratio: 0.31884979857792906 --- candidate_ratio:0.3125046462030368
+!!!!! ********* merge accepted ... 
+merged: {1, 5, 7, 9, 12, 13, 14, 15}
+to_process: {0, 3, 4, 6, 8, 10, 11}
+[(0, 0.16827459557845487), (3, 0.2374410164594651), (4, 0.15542270485153462), (6, 0.14756082640803472), (8, 0.11428215436794426), (10, 0.21271746611695994), (11, 0.1963573086859579)]
+next_candidate: 8
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 717841.8097872485
+codetable_size: 31923.14336789065
+complete: 749764.9531551391
+current_ratio: 0.3125046462030368 --- candidate_ratio:0.30293268700343895
+!!!!! ********* merge accepted ... 
+merged: {1, 5, 7, 8, 9, 12, 13, 14, 15}
+to_process: {0, 3, 4, 6, 10, 11}
+[(0, 0.15112613278062859), (3, 0.20358620569421682), (4, 0.13312934478117197), (6, 0.1309448121858114), (10, 0.18876478816428993), (11, 0.16805682329115815)]
+next_candidate: 6
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 703670.3673535329
+codetable_size: 37869.89526198252
+complete: 741540.2626155155
+current_ratio: 0.30293268700343895 --- candidate_ratio:0.29960960875811
+!!!!! ********* merge accepted ... 
+merged: {1, 5, 6, 7, 8, 9, 12, 13, 14, 15}
+to_process: {0, 3, 4, 10, 11}
+[(0, 0.1291594793256921), (3, 0.17109417353532397), (4, 0.11401372953205956), (10, 0.16203732391113382), (11, 0.14053587430727255)]
+next_candidate: 4
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 683236.0866558424
+codetable_size: 42513.4817906346
+complete: 725749.568446477
+current_ratio: 0.29960960875811 --- candidate_ratio:0.29322958606680316
+!!!!! ********* merge accepted ... 
+merged: {1, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15}
+to_process: {0, 3, 10, 11}
+[(0, 0.1151591323105557), (3, 0.15141447732519522), (10, 0.14038358524495453), (11, 0.12175541987959099)]
+next_candidate: 0
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 655342.9054385104
+codetable_size: 46741.45745219273
+complete: 702084.3628907031
+current_ratio: 0.29322958606680316 --- candidate_ratio:0.28366797042001807
+!!!!! ********* merge accepted ... 
+merged: {0, 1, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15}
+to_process: {3, 10, 11}
+[(3, 0.13139722234950246), (10, 0.1217747334392079), (11, 0.1056158306731102)]
+next_candidate: 11
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 640947.6228723832
+codetable_size: 50142.57721905686
+complete: 691090.2000914401
+current_ratio: 0.28366797042001807 --- candidate_ratio:0.2792259232636143
+!!!!! ********* merge accepted ... 
+merged: {0, 1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15}
+to_process: {3, 10}
+[(3, 0.11571107241802643), (10, 0.10715730446196721)]
+next_candidate: 10
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 595372.6851289448
+codetable_size: 55834.4079774564
+complete: 651207.0931064012
+current_ratio: 0.2792259232636143 --- candidate_ratio:0.2631116774400655
+!!!!! ********* merge accepted ... 
+merged: {0, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+to_process: {3}
+[(3, 0.09915479784348033)]
+next_candidate: 3
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+database_size: 569397.5709425199
+codetable_size: 63804.23433307913
+complete: 633201.805275599
+current_ratio: 0.2631116774400655 --- candidate_ratio:0.25583687725115
+!!!!! ********* merge accepted ... 
+merged table size: 1826
+chunks ... [0, 12210, 24420, 36630, 48842]
+chunks ... [0, 12210, 24420, 36630, 48842]
+merged table size without non-used codes: 1695
+database_size: 569397.5709425199
+codetable_size: 63804.23433307913
+complete: 633201.805275599
+database_size: 2474343.928416041
+codetable_size: 677.7028634765386
+complete: 2475021.631279518
+merged size: 633201.805275599
+sct size: 2475021.631279518
+merged ratio: 0.25583687725115
+time elapsed: 179.983500957489

@@ -1,0 +1,16 @@
+
+calculating merged ratio with naive ...
+
+real	0m6.284s
+user	0m18.564s
+sys	0m0.172s
+calculating merged ratio with naive_plus ...
+
+real	0m8.014s
+user	0m25.324s
+sys	0m0.356s
+calculating merged ratio with informed ...
+
+real	0m29.802s
+user	1m38.244s
+sys	0m0.540s
