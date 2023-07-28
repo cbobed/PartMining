@@ -3,7 +3,7 @@ Repository for all the code and resources associated with the paper *Language-Mo
 
 ## Content of the repository
 
-Source code of the approach for partitioning a transactional database adopting static dense language models and its related experiments. The code to convert RDF data into a transactional database can be found in the repository associated with our previous works on assessing the structural differences of RDF graphs, [SWKrimpSim](https://github.com/MaillPierre/SWKrimpSim). 
+Source code of the approach for partitioning a transactional database adopting static dense language models and its related experiments. The code to convert RDF data into a transactional database can be found in the repository associated with our [previous works on assessing the structural differences of RDF graphs](http://doi.org/10.3233/SW-200368), which code is available in the [SWKrimpSim repository](https://github.com/MaillPierre/SWKrimpSim). 
 
 + The [sid folder](https://github.com/cbobed/PartMining/tree/main/sid) contains the source code for managing all the data (loading the different formats of databases and code tables, calculating the item and transaction embeddings, partitioning the database, and calculating the different measures - e.g., compression ratio, entropy, etc.).
 
