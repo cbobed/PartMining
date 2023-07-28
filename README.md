@@ -16,6 +16,8 @@ Source code of the approach for partitioning a transactional database adopting s
 + The [experimentalResults folder](https://github.com/cbobed/PartMining/tree/main/experimentalResults) contains the raw results of the different experiments reported in the paper. 
 
 + The [notebook folder](https://github.com/MaillPierre/SWKrimpSim/tree/master/pythonCode) contains the initial notebooks used in the early stages of the project, including visualization and vector length / item frequency correlation. However, the code to be used is the included at *sid* folder (see above).
+
++ For better reproductivility of the classificacion and clustering experiments, we also provide trained transaction embeddings for CBDs and SBDs: [embeddings for CBDs](https://drive.google.com/uc?export=download&id=1AKmY40Ws0OV0L-cSCo60pPcjBxp1Haq5) and [embeddings for SBDs](https://drive.google.com/uc?export=download&id=1kzYyiTB7Q3VnqrAc-ilcsCYh3GFMUDZR)
   
 
 ## Citation
