@@ -19,7 +19,7 @@ Source code of the approach for partitioning a transactional database adopting s
 
 + For better reproductivility of the classificacion and clustering experiments, we also provide pretrained transaction embeddings for CBDs and SBDs: [embeddings for CBDs](https://drive.google.com/uc?export=download&id=1AKmY40Ws0OV0L-cSCo60pPcjBxp1Haq5) and [embeddings for SBDs](https://drive.google.com/uc?export=download&id=1kzYyiTB7Q3VnqrAc-ilcsCYh3GFMUDZR). To reproduce the experiments:
     - Classification experiments: Follow the instructions in the notebook `notebooks/ExperimentsClassificationTransactions.ipynb`
-    - Clustering experiments: 
+    - Clustering experiments: Follow the instructions in the Python scripts `sid/ClusteringExperiments/clustersExperimentsEmbeddings.py`, `sid/ClusteringExperiments/clustersExperimentsTkmeans.py`, `sid/ClusteringExperiments/clustersExperimentsTxmeans.py`, `sid/ClusteringExperiments/clustersExperimentsPairedTX-Emb.py`
   
 
 ## Citation
