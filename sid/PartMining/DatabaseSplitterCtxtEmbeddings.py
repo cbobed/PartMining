@@ -46,8 +46,8 @@ def trans_labelling_from_trans_vects(database, trans_vects, trans_clusters, dim,
     cluster = {}
     base_label_trans_item = 'trans_clust_'
     if clustering_method == 'k_means':
-        for t in trans_vects:
-            trans_D, trans_I = trans_clusters.index.search(trans_vects[t].reshape(1, dim), 1)
+        for t, vect in enumerate(trans_vects):
+            trans_D, trans_I = trans_clusters.index.search(vect.reshape(1, dim), 1)
             current_label = base_label_trans_item + str(trans_I[0, 0])
             if current_label not in cluster:
                 cluster[current_label] = []
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     print(f'checking :: vects {vects.shape} :: database {len(database_transactions)}')
 
     vector_dimension=vects.shape[1]
-
+    print(vector_dimension)
     # Note that we might want to normalize the item vectors and we are not pre-calculating
     # them, that's why I've kept the option
     if args.clustering == 'k_means' or args.clustering == 'hdbscan':
