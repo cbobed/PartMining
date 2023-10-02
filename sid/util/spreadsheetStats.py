@@ -45,30 +45,20 @@ class Headers:
 
 DATASET_NAMES = [
 	"adult.dat",
-	"anneal.dat",
 	"chessBig.dat",
-	"chess.dat",
 	"connect.dat",
-	"heart.dat",
-	"ionosphere.dat",
-	"iris.dat",
-	"led7.dat",
 	"letrecog.dat",
-	"mushroom.dat",
-	"nursery.dat",
 	"pendigits.dat",
-	"pima.dat",
-	"tictactoe.dat",
-	"wine.dat"
                  ]
 
 BATCH_NUMBER = 6 
-NUMBER_BLOCKS = 1 
+NUMBER_BLOCKS = 4 
 #BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
 #BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
-BATCH_DIR = os.path.join('.', 'tkmeans_batch_results', 'k16')
+BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15-norm')
+#BATCH_DIR = os.path.join('.', 'tkmeans_batch_results', 'k16')
 # BATCH_DIR = os.path.join('.', 'txmeans_batch_results')
-OUTPUT_FILE='tkmeans-grouped-k16.xls'
+OUTPUT_FILE='200-5-10-neg5-norm-grouped.xls'
 #OUTPUT_FILE='test.xls' 
 def treat_time_cell (content):
     aux = content.split('m')

@@ -1,8 +1,10 @@
 #!/bin/bash
+DATASETS="adult.dat chessBig.dat connect.dat letrecog.dat pendigits.dat"
 METHODS="k_means"
-for i in *.dat; do
+SIZES="4 8 16"
+for i in $DATASETS; do
 	for method in $METHODS; do  
-		for clusters in `seq 4 4 8`; do 
+		for clusters in $SIZES; do 
 			echo processing $i - $method - $clusters 
 			echo $i $method $clusters 0 $1 $2
 			./mergeMethodsComparison.sh $i $method $clusters 0 $1 $2

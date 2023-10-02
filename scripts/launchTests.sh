@@ -1,9 +1,10 @@
 #!/bin/bash
 #METHODS="k_means random"
-METHODS="random"
+METHODS="k_means"
 #CLUSTERS="4 8 16"
 CLUSTERS="8 16"
-DATASETS="dbpedia201610PCB.dat"
+#DATASETS="dbpedia201610PCB.dat"
+DATASETS="genomes.dat"
 #for i in *.dat; do 
 for i in $DATASETS; do 
 	for method in $METHODS; do 

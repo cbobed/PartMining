@@ -24,9 +24,9 @@ OUTPUT_SPLITTED_PATH="$PYTHON_PROJECT_PATH"/output_databases
 
 #configuration of the first script to obtain the vectors 
 DIMENSION=200
-WIN_SIZE=5
-EPOCHS=10
-WORKERS=4
+WIN_SIZE=200
+EPOCHS=20
+WORKERS=8
 
 
 # configuration of the second script to split the database_name
@@ -35,7 +35,7 @@ CLUSTERING=$2
 GRANULARITY=transaction
 NUM_CLUSTERS=$3
 # set NORMALIZE to -normalize if we want to normalize the vectors
-NORMALIZE=-normalize
+NORMALIZE=
 PRUNING_THRESHOLD=0
 
 # configuration of the third script
@@ -59,10 +59,10 @@ cd $PYTHON_PROJECT_PATH
 ./calculateEntropy.sh $1
 
 
-if [[ $CLUSTERING != "random" ]]; then 
-	echo "calculate vectors ..." > "$TIME_FILE"
-	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
-fi
+#if [[ $CLUSTERING != "random" ]]; then 
+#	echo "calculate vectors ..." > "$TIME_FILE"
+#	{ time ./calculateVectors.sh $1 $WIN_SIZE $DIMENSION $EPOCHS $WORKERS >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>> "$TIME_FILE"
+#fi
 
 # we should now have database_name+'_DIMENSION_WIN_EPOCHS_sg.vect' as name of the model
 MODEL_FILE="$1"_"$DIMENSION"_"$WIN_SIZE"_"$EPOCHS"_sg.vect
@@ -132,9 +132,9 @@ for db in "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME"*.dat; do
 	(( ACTUAL_NUM_CLUSTER = ACTUAL_NUM_CLUSTER + 1 ))
 done 
 
-# $4 is going to be the initial index 
-echo We have "$ACTUAL_NUM_CLUSTER" clusters
-echo "calculating merged ratio ..." >> "$TIME_FILE"
-{ time ./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $4 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS" >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
+## $4 is going to be the initial index 
+#echo We have "$ACTUAL_NUM_CLUSTER" clusters
+#echo "calculating merged ratio ..." >> "$TIME_FILE"
+#{ time ./calculateMergedRatio.sh $1 "$OUTPUT_SPLITTED_PATH"/"$SPLITTED_BASENAME" "$ACTUAL_NUM_CLUSTER" $4 "$PRUNING_THRESHOLD" "$MERGE_METHOD" "$ALL_RATIOS" >> "$OUTPUT_FILE" 2>>"$ERR_FILE" ; } 2>>"$TIME_FILE"
 
 cd "$CURRENT_PATH"
