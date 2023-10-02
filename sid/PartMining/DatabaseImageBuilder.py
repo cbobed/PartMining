@@ -50,9 +50,4 @@ if __name__ == "__main__":
         for trans_id in db:
             for item_id in db[trans_id]:
                 im.putpixel((translation_table[int(item_id)], trans_id), (0,0,0))
-
-<<<<<<< HEAD
-    im.save(args.database_file+'.jpg')
-=======
     im.save(args.database_file+'.png')
->>>>>>> 85c1480d66e2323cd8531c1792ab2d2a8ea7a237

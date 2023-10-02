@@ -145,6 +145,7 @@ if __name__ == "__main__":
 
     vector_dimension=vects.shape[1]
 
+
     # Note that we might want to normalize the item vectors and we are not pre-calculating
     # them, that's why I've kept the option
     if args.clustering == 'k_means' or args.clustering == 'hdbscan':
