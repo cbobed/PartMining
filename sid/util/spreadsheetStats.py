@@ -51,14 +51,15 @@ DATASET_NAMES = [
 	"pendigits.dat",
                  ]
 
-BATCH_NUMBER = 6 
-NUMBER_BLOCKS = 4 
+BATCH_NUMBER =6 
+NUMBER_BLOCKS = 2 
 #BATCH_DIR = os.path.join('.', 'statisticalRelevance', 'batch_results')
 #BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15')
-BATCH_DIR = os.path.join('.', 'batch_results', '200d-5-10-neg15-norm')
+BATCH_DIR = os.path.join('.', 'batch_results', 'ctxt-768d')
 #BATCH_DIR = os.path.join('.', 'tkmeans_batch_results', 'k16')
 # BATCH_DIR = os.path.join('.', 'txmeans_batch_results')
-OUTPUT_FILE='200-5-10-neg5-norm-grouped.xls'
+OUTPUT_FILE='ctxt768d-grouped.xls'
+
 #OUTPUT_FILE='test.xls' 
 def treat_time_cell (content):
     aux = content.split('m')
@@ -90,13 +91,20 @@ if __name__ == "__main__":
                     reader = csv.reader(csv_file, delimiter=';')
                     ## first block
                     current_row = reader.__next__()
+                    print(current_row)
                     current_data[Headers.GLOBAL_VOCAB_SIZE] =float(current_row[1])
                     current_row = reader.__next__()
+                    print(current_row)
                     current_data[Headers.GLOBAL_FILE_ENTROPY] = float(current_row[1])
                     current_row = reader.__next__()
+                    print(current_row)
                     current_data[Headers.GLOBAL_FILE_NORMAL_ENTROPY] = float(current_row[1])
+                    current_row = reader.__next__()
+                    print(current_row)
+                    current_data[Headers.WEIGHTED_ENTROPY] = float(current_row[1])
 
                     current_row = reader.__next__()
+                    print(current_row)
                     current_data[Headers.EXECS] = {}
                     ## several blocks repeated differently depending on the method used
                     for i in range(NUMBER_BLOCKS):
@@ -107,15 +115,18 @@ if __name__ == "__main__":
                         current_exec[Headers.METHOD] = current_row[0].split()[3]
                         skip_row(reader, 2)
                         current_row = reader.__next__()
-                        if (current_row[1].strip() != 'NA'):
+                        print(current_row)
+                        if (current_row[1].strip() != 'NA' and current_row[1].strip() != '--'):
                             current_exec[Headers.VECTOR_TIME] = treat_time_cell(current_row[1])
                         else:
                             current_exec[Headers.VECTOR_TIME] = 0.0
                         skip_row(reader, 3)
                         current_row = reader.__next__()
+                        print(current_row)
                         current_exec[Headers.SPLIT_TIME] = treat_time_cell(current_row[1])
                         skip_row(reader, 3)
                         current_row = reader.__next__()
+                        print(current_row)
                         current_exec[Headers.MERGE_TIME] = treat_time_cell(current_row[1])
                         ## Ratios
                         skip_row(reader, 3)
@@ -125,11 +136,9 @@ if __name__ == "__main__":
                             current_row = reader.__next__()
                             #print(f' {current_row}')
                             current_exec[Headers.RATIOS][i] = float(current_row[1])
-
+                        print(current_exec)
                         current_row = reader.__next__()
                         current_exec[Headers.MERGED_RATIO] = float(current_row[1])
-                        current_row = reader.__next__()
-                        current_exec[Headers.MERGED_CODES] = float(current_row[1])
 
                         ## Mining times
                         current_row = reader.__next__()
@@ -156,7 +165,7 @@ if __name__ == "__main__":
                             current_row = reader.__next__()
                             current_exec[Headers.PARTITION_INFO][i][Headers.WEIGHTED_ENTROPY] = float(current_row[1])
                             current_row = next(reader, None)
-                        #print(current_exec)
+                        print(current_exec)
             except Exception as e:
                 print(f'Marking {batch} as INVALID')
                 print(e)
@@ -246,12 +255,6 @@ if __name__ == "__main__":
                         line += 1
                 line+=1
 
-                for batch in range(1, BATCH_NUMBER):
-                    if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):
-                        current_datasheet.write(line, col+1, Headers.MERGED_CODES+'_'+str(batch))
-                        current_datasheet.write(line, col+2, gathered_data[dataset][batch][Headers.EXECS][execID][Headers.MERGED_CODES])
-                        line += 1
-                line+=1
 
                 for batch in range(1, BATCH_NUMBER):
                     if (Headers.INVALID_BATCH not in gathered_data[dataset][batch]):

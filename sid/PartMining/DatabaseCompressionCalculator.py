@@ -139,6 +139,8 @@ if __name__ == "__main__":
         print(f'number of codetables: {len(codetables_info)}')
         for c in codetables_info:
             print(f'size: {len(c["codetable"])}')
+            print(f'keys: {c.keys()}')
+
 
         if args.merge_method == 'naive':
             converted_merged_codetable = ct.merge_codetables_naive_converted(codetables_info)
