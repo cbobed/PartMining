@@ -559,7 +559,6 @@ def merge_codetables_naive_converted(codetables_info):
             if j not in to_omit:
                 to_omit[j] = set()
             table_i = codetables_info[i]['codetable']
-            singletons_i = codetables_info[i]['singletons']
             table_j = codetables_info[j]['codetable']
             auxCount = 0
             ## deduplicate i against j
