@@ -1,0 +1,68 @@
+DBpedia 3.6 files:
+- dbpedia_3.6.ontology.nt.bz2
+- dbpedia_3.6.owl
+- instance_types_en.nt.bz2
+- mappingbased_properties_en.nt.bz2
+- persondata_en.nt.bz2
+- specific_mappingbased_properties_en.nt.bz2
+
+DBpedia 3.7 files:
+- dbpedia_3.7.ontology.nt.bz2
+- dbpedia_3.7.owl
+- instance_types_en.nt.bz2
+- mappingbased_properties_en.nt.bz2
+- persondata_en.nt.bz2
+- specific_mappingbased_properties_en.nt.bz2
+
+DBpedia 3.8 files:
+- dbpedia_3.8.owl.bz2
+- instance_types_en.nt.bz2
+- mappingbased_properties_en.nt.bz2
+- persondata_en.nt.bz2
+- specific_mappingbased_properties_en.nt.bz2
+
+DBpedia 3.9 files:
+- dbpedia_3.9.owl.bz2
+- instance_types_en.nt.bz2
+- instance_types_heuristic_en.nt.bz2
+- mappingbased_properties_cleaned_en.nt.bz2
+- mappingbased_properties_en.nt.bz2
+- persondata_en.nt.bz2
+- specific_mappingbased_properties_en.nt.bz2
+
+DBpedia 2014:
+- dbpedia_2014.nt.bz2
+- dbpedia_2014.owl.bz2
+- instance_types_en.nt.bz2
+- instance_types_heuristic_en.nt.bz2
+- mappingbased_properties_cleaned_en.nt.bz2
+- mappingbased_properties_en.nt.bz2
+- persondata_en.nt.bz2
+- specific_mappingbased_properties_en.nt.bz2
+
+DBpedia 2015-10:
+- dbpedia_2015-10.nt
+- instance_types_en.ttl
+- instance_types_sdtyped_dbo_en.ttl
+- instance_types_transitive_en.ttl
+- mappingbased_literals_en.ttl
+- mappingbased_objects_disjoint_domain_en.ttl
+- mappingbased_objects_disjoint_range_en.ttl
+- mappingbased_objects_en.ttl
+- persondata_en.ttl
+- persondata_unredirected_en.ttl
+- specific_mappingbased_properties_en.ttl
+
+DBpedia 2016-10:
+- dbpedia_2016-10.nt
+- instance_types_en.ttl.bz2
+- instance_types_sdtyped_dbo_en.ttl.bz2
+- instance_types_transitive_en.ttl.bz2
+- mappingbased_literals_en.nt
+- mappingbased_literals_en.ttl
+- mappingbased_objects_disjoint_domain_en.ttl.bz2
+- mappingbased_objects_disjoint_range_en.ttl.bz2
+- mappingbased_objects_en.ttl.bz2
+- mappingbased_objects_uncleaned_en.ttl.bz2
+- persondata_en.ttl.bz2
+- specific_mappingbased_properties_en.ttl.bz2
