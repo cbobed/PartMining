@@ -24,5 +24,5 @@ Source code of the approach for partitioning a transactional database adopting s
 
 ## Citation
 
-Not yet published, submitted for ACM SIGMOD/PODS Conference (2024), 2024. 
+Not yet published, submitted for ACM SIGMOD/PODS Conference, 2024. 
 
