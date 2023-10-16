@@ -1,5 +1,5 @@
 # PartMining
-Repository for all the code and resources associated with the paper *Language-Model Based Informed Partition of Databases to Speed Up Pattern Mining*, submitted to VLDB 2024 (pVLDB, vol. 17). 
+Repository for all the code and resources associated with the paper *Language-Model Based Informed Partition of Databases to Speed Up Pattern Mining*, submitted to ACM SIGMOD/PODS Conference, 2024. 
 
 ## Content of the repository
 
@@ -24,5 +24,5 @@ Source code of the approach for partitioning a transactional database adopting s
 
 ## Citation
 
-Not yet published, submitted for pVLDB vol.17, 2024. 
+Not yet published, submitted for ACM SIGMOD/PODS Conference (2024), 2024. 
 
