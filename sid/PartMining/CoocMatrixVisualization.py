@@ -8,6 +8,8 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
+import math
+
 
 # we must:
 #  - load and display the base db
@@ -58,6 +60,7 @@ if __name__ == '__main__':
 
     original_matrix = build_global_cooc_matrix(original_db, len(analysis_table[0]))
 
+    plt.figure()
     ax = plt.gca()
 
     # Plot the heatmap
@@ -66,5 +69,25 @@ if __name__ == '__main__':
     # Create colorbar
     cbar = ax.figure.colorbar(im, ax=ax)
     cbar.ax.set_ylabel("", rotation=-90, va="bottom")
+    plt.show(block=False)
+
+    plt.figure()
+    k = int(args.k)
+    aux = math.ceil(math.sqrt(k))
+    if (aux * aux == args.k):
+        figure, axis = plt.subtplots(aux, aux)
+    else:
+        figure, axis = plt.subplots (aux, aux+1)
+
+    for i in range(k):
+        print(f'processing {i} partition ... ')
+        partition_dat = tdb.read_database_dat(args.partition_basename+str(i)+'_k'+str(k)+'.dat')
+        current_matrix = build_cooc_matrix_translating(partition_dat, len(analysis_table[0]), analysis_table)
+
+        im = axis[i//aux][i%aux].imshow(current_matrix)
+        current_cbar = axis[i//aux][i%aux].figure.colorbar(im, ax=axis[i//aux][i%aux])
+        current_cbar.ax.set_ylabel("", rotation=-90, va="bottom")
     plt.show()
+
+
 
