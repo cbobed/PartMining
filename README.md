@@ -23,7 +23,7 @@ Source code of the approach for partitioning a transactional database adopting s
   
 
 ## Citation
-
+```
 @article{sigmod24,
     author={Carlos Bobed and Jorge Bernad and Pierre Maillot},
     journal={Proceedings of the ACM on Management of Data (PACMMOD) - SIGMOD'24},
@@ -36,4 +36,4 @@ Source code of the approach for partitioning a transactional database adopting s
     year={2024},
     idbdi={yes}
 }
-
+```
