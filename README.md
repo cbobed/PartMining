@@ -24,5 +24,16 @@ Source code of the approach for partitioning a transactional database adopting s
 
 ## Citation
 
-Not yet published, submitted for ACM SIGMOD/PODS Conference, 2024. 
+@article{sigmod24,
+    author={Carlos Bobed and Jorge Bernad and Pierre Maillot},
+    journal={Proceedings of the ACM on Management of Data (PACMMOD) - SIGMOD'24},
+    month={June},
+    note={eISSN: 2836-6573, https://doi.org/10.1145/3654987, article 184},
+    number={3 (SIGMOD)},
+    pages={1--24},
+    title={Language-Model Based Informed Partition of Databases to Speed Up Pattern Mining},
+    volume={2},
+    year={2024},
+    idbdi={yes}
+}
 
