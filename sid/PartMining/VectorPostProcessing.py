@@ -7,23 +7,16 @@
 # Notes:
 ##############################################################################
 
-from gensim.models import Word2Vec
-from gensim.models import KeyedVectors
-from sid.util.AllButTop import all_but_the_top
-import numpy as np
-from sklearn import preprocessing
-import math
-import os
-import time
-import faiss
-import hdbscan
 import argparse
-import random
-import ntpath
+import time
+
+from gensim.models import KeyedVectors
+from gensim.models import Word2Vec
+
+from AllButTop import all_but_the_top
 
 ## I was going to use scikit directly, but I saw this post
 ## kudos for him https://towardsdatascience.com/k-means-8x-faster-27x-lower-error-than-scikit-learns-in-25-lines-eaedc7a3a0c8
-import faiss
 
 if __name__ == "__main__":
     # params: -database filename of the extension
@@ -50,11 +43,10 @@ if __name__ == "__main__":
     else:
         num_dimensions = vector_dimension // 100
 
-    labelled_vects = {int(x): model.wv.get_vector(x) for x in model.wv.key_to_index}
-    print(f'Model loaded in {time.time() - start_time} s.')
-
     output_vectors = all_but_the_top(model.wv.vectors, num_dimensions)
     kVectors = KeyedVectors(vector_dimension)
     for x in model.wv.key_to_index:
         kVectors.add_vector(x, output_vectors[model.wv.key_to_index[x]])
     kVectors.save(args.model_file+"-postProc-"+str(num_dimensions)+".vect")
+    print(f'original vocab size: {len(model.wv.vectors)}')
+    print(f'post-processed vocab size: {len(kVectors.vectors)}')
