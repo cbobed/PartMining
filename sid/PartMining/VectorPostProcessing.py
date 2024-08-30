@@ -44,9 +44,5 @@ if __name__ == "__main__":
         num_dimensions = vector_dimension // 100
 
     output_vectors = all_but_the_top(model.wv.vectors, num_dimensions)
-    kVectors = KeyedVectors(vector_dimension)
-    for x in model.wv.key_to_index:
-        kVectors.add_vector(x, output_vectors[model.wv.key_to_index[x]])
-    kVectors.save(args.model_file+"-postProc-"+str(num_dimensions)+".vect")
-    print(f'original vocab size: {len(model.wv.vectors)}')
-    print(f'post-processed vocab size: {len(kVectors.vectors)}')
+    model.wv.vectors = output_vectors
+    model.save(args.model_file+"-postProc-"+str(num_dimensions)+".vect")
