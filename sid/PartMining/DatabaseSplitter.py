@@ -28,6 +28,8 @@ import argparse
 import random
 import ntpath
 
+from AllButTop import all_but_the_top
+
 ## I was going to use scikit directly, but I saw this post
 ## kudos for him https://towardsdatascience.com/k-means-8x-faster-27x-lower-error-than-scikit-learns-in-25-lines-eaedc7a3a0c8
 import faiss
@@ -312,12 +314,22 @@ if __name__ == "__main__":
                            help="normalize the vectors, default: False", default=False)
     my_parser.add_argument('-num_clusters', action='store', required=False, type=int,
                            help='number of clusters for the clustering algorithms, default: 4', default=4)
+    my_parser.add_argument('-all_but_top', action='store_true', required=False,
+                           help='if present, we apply all-but-top paper to the transaction vectors', default=False)
+    my_parser.add_argument('-num_dim_abt', action='store', required=False, type=int,
+                           help='num of dimensions to consider in abt algorithm, default: model_dim/100')
 
     args=my_parser.parse_args()
 
     start_time = time.time()
     model = Word2Vec.load(args.model_file)
     vector_dimension = model.wv.vector_size
+
+    if args.num_dim_abt is not None:
+        abt_dim = args.num_dim_abt
+    else:
+        abt_dim = vector_dimension // 100
+
     labelled_vects = {int(x): model.wv.get_vector(x) for x in model.wv.key_to_index}
     print(f'Model loaded in {time.time() - start_time} s.')
 
@@ -352,6 +364,9 @@ if __name__ == "__main__":
             vects = [normalized_centroids[c] for c in sorted(normalized_centroids)]
         else:
             vects = [centroids[c] for c in sorted(centroids)]
+
+    if args.all_but_top:
+        vects = all_but_the_top(vects, abt_dim)
 
     # Note that we might want to normalize the item vectors and we are not pre-calculating
     # them, that's why I've kept the option
